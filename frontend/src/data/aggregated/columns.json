@@ -1,0 +1,17 @@
+[
+    {
+      "id": "total_revenue",
+      "name": "Total Revenue",
+      "type": "text"
+    },
+    {
+      "id": "country",
+      "name": "Country code",
+      "type": "text"
+    },
+    {
+        "id": "country_name",
+        "name": "Country",
+        "type": "text"
+    }
+  ]
