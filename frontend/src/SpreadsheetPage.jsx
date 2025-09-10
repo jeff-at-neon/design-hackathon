@@ -41,6 +41,7 @@ import '@databricks/design-system/dist/index.css';
 import Handsontable from 'handsontable';
 import 'handsontable/styles/handsontable.min.css';
 import 'handsontable/styles/ht-theme-main.min.css';
+import SpreadsheetSourceModal from './components/SpreadsheetSourceModal';
 import './AgentsPage.css';
 import './HomePage.css';
 import './SpreadsheetPage.css';
@@ -51,6 +52,7 @@ const SpreadsheetPage = ({ onNavigate }) => {
   const [columns, setColumns] = useState([]);
   const [tableName, setTableName] = useState('merchant_payment_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
+  const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
   const popoverRef = useRef(null);
   const handsontableRef = useRef(null);
   const hotInstanceRef = useRef(null);
@@ -153,9 +155,21 @@ const SpreadsheetPage = ({ onNavigate }) => {
 
   const handleCreateNew = (itemId) => {
     if (itemId === 'spreadsheet') {
-      handleNavigate('spreadsheet');
+      setShowSpreadsheetModal(true);
     }
     setShowNewPopover(false);
+  };
+
+  const handleSpreadsheetSourceSelect = (selection) => {
+    console.log('Selected source:', selection);
+    // Update table name and potentially reload data based on selection
+    if (selection.type === 'table') {
+      setTableName(selection.data.table);
+      // Here you could load actual data from the selected table
+    } else if (selection.type === 'query') {
+      setTableName(selection.data.name);
+      // Here you could execute the query and load results
+    }
   };
 
   const toggleNewPopover = () => {
@@ -494,6 +508,13 @@ const SpreadsheetPage = ({ onNavigate }) => {
             </div>
           </div>
         </div>
+
+        {/* Spreadsheet Source Modal */}
+        <SpreadsheetSourceModal
+          isOpen={showSpreadsheetModal}
+          onClose={() => setShowSpreadsheetModal(false)}
+          onSelect={handleSpreadsheetSourceSelect}
+        />
       </DesignSystemThemeProvider>
     </DesignSystemProvider>
   );

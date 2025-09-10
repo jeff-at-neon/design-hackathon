@@ -39,6 +39,7 @@ import {
   Typography
 } from '@databricks/design-system';
 import '@databricks/design-system/dist/index.css';
+import SpreadsheetSourceModal from './components/SpreadsheetSourceModal';
 import './AgentsPage.css';
 import './HomePage.css';
 
@@ -46,6 +47,7 @@ const HomePage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('suggested');
   const [showNewPopover, setShowNewPopover] = useState(false);
+  const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
   const popoverRef = useRef(null);
 
   const toggleSidebar = () => {
@@ -60,9 +62,15 @@ const HomePage = ({ onNavigate }) => {
 
   const handleCreateNew = (itemId) => {
     if (itemId === 'spreadsheet') {
-      handleNavigate('spreadsheet');
+      setShowSpreadsheetModal(true);
     }
     setShowNewPopover(false);
+  };
+
+  const handleSpreadsheetSourceSelect = (selection) => {
+    console.log('Selected source:', selection);
+    // Navigate to spreadsheet page with the selected source
+    handleNavigate('spreadsheet');
   };
 
   const toggleNewPopover = () => {
@@ -463,6 +471,13 @@ const HomePage = ({ onNavigate }) => {
             </div>
           </div>
         </div>
+
+        {/* Spreadsheet Source Modal */}
+        <SpreadsheetSourceModal
+          isOpen={showSpreadsheetModal}
+          onClose={() => setShowSpreadsheetModal(false)}
+          onSelect={handleSpreadsheetSourceSelect}
+        />
       </DesignSystemThemeProvider>
     </DesignSystemProvider>
   );
