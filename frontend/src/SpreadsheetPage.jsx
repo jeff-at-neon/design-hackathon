@@ -42,6 +42,7 @@ import Handsontable from 'handsontable';
 import 'handsontable/styles/handsontable.min.css';
 import 'handsontable/styles/ht-theme-main.min.css';
 import SpreadsheetSourceModal from './components/SpreadsheetSourceModal';
+import SQLQueryDrawer from './components/SQLQueryDrawer';
 import './AgentsPage.css';
 import './HomePage.css';
 import './SpreadsheetPage.css';
@@ -53,6 +54,17 @@ const SpreadsheetPage = ({ onNavigate }) => {
   const [tableName, setTableName] = useState('merchant_payment_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
   const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
+  const [showSQLDrawer, setShowSQLDrawer] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState(`SELECT 
+    psp_reference,
+    merchant,
+    card_scheme,
+    year,
+    hour
+FROM main.default.merchant_payment_data
+WHERE year >= 2023
+ORDER BY psp_reference DESC
+LIMIT 1000;`);
   const popoverRef = useRef(null);
   const handsontableRef = useRef(null);
   const hotInstanceRef = useRef(null);
@@ -165,10 +177,33 @@ const SpreadsheetPage = ({ onNavigate }) => {
     // Update table name and potentially reload data based on selection
     if (selection.type === 'table') {
       setTableName(selection.data.table);
-      // Here you could load actual data from the selected table
+      // Generate sample SQL query for the selected table
+      const query = `SELECT *
+FROM ${selection.data.fullPath}
+WHERE year >= 2023
+ORDER BY psp_reference DESC
+LIMIT 1000;`;
+      setCurrentQuery(query);
     } else if (selection.type === 'query') {
       setTableName(selection.data.name);
-      // Here you could execute the query and load results
+      // Use a sample query for saved queries
+      const query = `-- Saved Query: ${selection.data.name}
+-- ${selection.data.description}
+
+SELECT 
+    psp_reference,
+    merchant,
+    card_scheme,
+    year,
+    hour,
+    COUNT(*) as transaction_count,
+    SUM(amount) as total_amount
+FROM main.default.merchant_payment_data
+WHERE year = 2023
+GROUP BY psp_reference, merchant, card_scheme, year, hour
+HAVING COUNT(*) > 1
+ORDER BY total_amount DESC;`;
+      setCurrentQuery(query);
     }
   };
 
@@ -253,7 +288,7 @@ const SpreadsheetPage = ({ onNavigate }) => {
   return (
     <DesignSystemProvider>
       <DesignSystemThemeProvider>
-        <div className="agents-container">
+        <div className={`agents-container ${showSQLDrawer ? 'drawer-open' : ''}`}>
           {/* Top Bar */}
           <div className="top-bar">
             <div className="top-bar-left">
@@ -446,65 +481,80 @@ const SpreadsheetPage = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Main Content - Spreadsheet */}
-            <div className="main-content spreadsheet-content">
-              {/* Spreadsheet Header */}
-              <div className="spreadsheet-header">
-                <div className="spreadsheet-title">
-                  <input
-                    type="text"
-                    value={tableName}
-                    onChange={(e) => setTableName(e.target.value)}
-                    className="table-name-input"
-                  />
+            {/* Main Content with Drawer Layout */}
+            <div className="content-with-drawer">
+              {/* Spreadsheet Content */}
+              <div className={`main-content spreadsheet-content ${showSQLDrawer ? 'drawer-open' : ''}`}>
+                {/* Spreadsheet Header */}
+                <div className="spreadsheet-header">
+                  <div className="spreadsheet-title">
+                    <input
+                      type="text"
+                      value={tableName}
+                      onChange={(e) => setTableName(e.target.value)}
+                      className="table-name-input"
+                    />
+                  </div>
+                  <div className="spreadsheet-actions">
+                    <button className="action-button" onClick={undoAction}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                        <path d="M21 3v5h-5"></path>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                        <path d="M3 21v-5h5"></path>
+                      </svg>
+                      Undo
+                    </button>
+                    <button className="action-button" onClick={redoAction}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                        <path d="M3 21v-5h5"></path>
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                        <path d="M21 3v5h-5"></path>
+                      </svg>
+                      Redo
+                    </button>
+                    <button className="action-button enrich-button">
+                      <LightningIcon />
+                      Enrich
+                    </button>
+                    <button className="action-button" onClick={() => setShowSQLDrawer(true)}>
+                      <CodeIcon />
+                      View SQL
+                    </button>
+                    <button className="action-button">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16,6 12,2 8,6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                      </svg>
+                      Share
+                    </button>
+                  </div>
                 </div>
-                <div className="spreadsheet-actions">
-                  <button className="action-button" onClick={undoAction}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                      <path d="M21 3v5h-5"></path>
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                      <path d="M3 21v-5h5"></path>
-                    </svg>
-                    Undo
-                  </button>
-                  <button className="action-button" onClick={redoAction}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                      <path d="M3 21v-5h5"></path>
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                      <path d="M21 3v5h-5"></path>
-                    </svg>
-                    Redo
-                  </button>
-                  <button className="action-button enrich-button">
-                    <LightningIcon />
-                    Enrich
-                  </button>
-                  <button className="action-button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                      <polyline points="16,6 12,2 8,6"></polyline>
-                      <line x1="12" y1="2" x2="12" y2="15"></line>
-                    </svg>
-                    Share
+
+                <div className="select-cell-indicator">Select cell</div>
+
+                {/* Handsontable Container */}
+                <div className="spreadsheet-table-container">
+                  <div ref={handsontableRef} className="handsontable-container"></div>
+                </div>
+
+                {/* Add Row Button */}
+                <div className="add-row-container">
+                  <button className="add-row-btn" onClick={addRow}>
+                    + Add row
                   </button>
                 </div>
               </div>
 
-              <div className="select-cell-indicator">Select cell</div>
-
-              {/* Handsontable Container */}
-              <div className="spreadsheet-table-container">
-                <div ref={handsontableRef} className="handsontable-container"></div>
-              </div>
-
-              {/* Add Row Button */}
-              <div className="add-row-container">
-                <button className="add-row-btn" onClick={addRow}>
-                  + Add row
-                </button>
-              </div>
+              {/* SQL Query Drawer */}
+              <SQLQueryDrawer
+                isOpen={showSQLDrawer}
+                onClose={() => setShowSQLDrawer(false)}
+                query={currentQuery}
+                tableName={tableName}
+              />
             </div>
           </div>
         </div>
