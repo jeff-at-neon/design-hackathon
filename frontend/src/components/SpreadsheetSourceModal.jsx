@@ -22,6 +22,7 @@ const SpreadsheetSourceModal = ({ isOpen, onClose, onSelect }) => {
   const [selectedQuery, setSelectedQuery] = useState(null);
   const [expandedItems, setExpandedItems] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('for-you');
 
   // Mock data for Unity Catalog
   const catalogData = {
@@ -188,12 +189,22 @@ const SpreadsheetSourceModal = ({ isOpen, onClose, onSelect }) => {
     }
   };
 
-  // Filter catalog data based on search query
+  // Filter catalog data based on search query and filter
   const getFilteredCatalogData = () => {
-    if (!searchQuery.trim()) return catalogData;
+    let dataToFilter = catalogData;
+    
+    // Apply filter first
+    if (activeFilter === 'for-you') {
+      // Show only "main" catalog for "For you" filter
+      dataToFilter = {
+        'main': catalogData['main'] || {}
+      };
+    }
+    
+    if (!searchQuery.trim()) return dataToFilter;
     
     const filtered = {};
-    Object.entries(catalogData).forEach(([catalog, schemas]) => {
+    Object.entries(dataToFilter).forEach(([catalog, schemas]) => {
       const filteredSchemas = {};
       let hasMatchingContent = false;
       
@@ -218,12 +229,22 @@ const SpreadsheetSourceModal = ({ isOpen, onClose, onSelect }) => {
     return filtered;
   };
 
-  // Filter query data based on search query
+  // Filter query data based on search query and filter
   const getFilteredQueryData = () => {
-    if (!searchQuery.trim()) return queryFolders;
+    let dataToFilter = queryFolders;
+    
+    // Apply filter first
+    if (activeFilter === 'for-you') {
+      // Show only "Users" folder for "For you" filter
+      dataToFilter = {
+        'Users': queryFolders['Users'] || {}
+      };
+    }
+    
+    if (!searchQuery.trim()) return dataToFilter;
     
     const filtered = {};
-    Object.entries(queryFolders).forEach(([topFolder, subFolders]) => {
+    Object.entries(dataToFilter).forEach(([topFolder, subFolders]) => {
       const filteredSubFolders = {};
       let hasMatchingContent = false;
       
@@ -337,6 +358,23 @@ const SpreadsheetSourceModal = ({ isOpen, onClose, onSelect }) => {
                     />
                   </div>
                 </div>
+                
+                <div className="filter-pills-container">
+                  <div className="filter-pills">
+                    <button 
+                      className={`filter-pill ${activeFilter === 'for-you' ? 'active' : ''}`}
+                      onClick={() => setActiveFilter('for-you')}
+                    >
+                      For you
+                    </button>
+                    <button 
+                      className={`filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
+                      onClick={() => setActiveFilter('all')}
+                    >
+                      All
+                    </button>
+                  </div>
+                </div>
 
                 <div className="catalog-browser">
                   <div className="catalog-tree">
@@ -425,6 +463,23 @@ const SpreadsheetSourceModal = ({ isOpen, onClose, onSelect }) => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                  </div>
+                </div>
+                
+                <div className="filter-pills-container">
+                  <div className="filter-pills">
+                    <button 
+                      className={`filter-pill ${activeFilter === 'for-you' ? 'active' : ''}`}
+                      onClick={() => setActiveFilter('for-you')}
+                    >
+                      For you
+                    </button>
+                    <button 
+                      className={`filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
+                      onClick={() => setActiveFilter('all')}
+                    >
+                      All
+                    </button>
                   </div>
                 </div>
 
