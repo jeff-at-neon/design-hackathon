@@ -38,6 +38,9 @@ import {
   Typography
 } from '@databricks/design-system';
 import '@databricks/design-system/dist/index.css';
+import Handsontable from 'handsontable';
+import 'handsontable/styles/handsontable.min.css';
+import 'handsontable/styles/ht-theme-main.min.css';
 import './AgentsPage.css';
 import './HomePage.css';
 import './SpreadsheetPage.css';
@@ -46,11 +49,11 @@ const SpreadsheetPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [selectedCell, setSelectedCell] = useState({ row: 0, col: 0 });
-  const [editingCell, setEditingCell] = useState(null);
   const [tableName, setTableName] = useState('merchant_payment_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
   const popoverRef = useRef(null);
+  const handsontableRef = useRef(null);
+  const hotInstanceRef = useRef(null);
 
   // Initialize with sample data similar to the Handsontable demo
   useEffect(() => {
@@ -77,6 +80,65 @@ const SpreadsheetPage = ({ onNavigate }) => {
 
     setTableData(sampleData);
     setColumns(sampleColumns);
+
+    // Initialize Handsontable
+    if (handsontableRef.current && !hotInstanceRef.current) {
+      hotInstanceRef.current = new Handsontable(handsontableRef.current, {
+        data: sampleData,
+        colHeaders: sampleColumns.map(col => col.name),
+        rowHeaders: true,
+        width: '100%',
+        height: 'auto',
+        licenseKey: 'non-commercial-and-evaluation',
+        themeName: 'ht-theme-main',
+        contextMenu: true,
+        copyPaste: true,
+        fillHandle: true,
+        undoRedo: true,
+        columnSorting: true,
+        filters: true,
+        dropdownMenu: true,
+        manualColumnResize: true,
+        manualRowResize: true,
+        stretchH: 'all',
+        afterChange: (changes, source) => {
+          if (source !== 'loadData') {
+            setTableData(hotInstanceRef.current.getData());
+          }
+        },
+        afterCreateRow: (index, amount) => {
+          setTableData(hotInstanceRef.current.getData());
+        },
+        afterRemoveRow: (index, amount) => {
+          setTableData(hotInstanceRef.current.getData());
+        },
+        afterCreateCol: (index, amount) => {
+          const newColumns = [...columns];
+          for (let i = 0; i < amount; i++) {
+            newColumns.splice(index + i, 0, {
+              id: `column_${Date.now()}_${i}`,
+              name: `Column ${index + i + 1}`,
+              type: 'text'
+            });
+          }
+          setColumns(newColumns);
+          setTableData(hotInstanceRef.current.getData());
+        },
+        afterRemoveCol: (index, amount) => {
+          const newColumns = [...columns];
+          newColumns.splice(index, amount);
+          setColumns(newColumns);
+          setTableData(hotInstanceRef.current.getData());
+        }
+      });
+    }
+
+    return () => {
+      if (hotInstanceRef.current) {
+        hotInstanceRef.current.destroy();
+        hotInstanceRef.current = null;
+      }
+    };
   }, []);
 
   const toggleSidebar = () => {
@@ -114,46 +176,28 @@ const SpreadsheetPage = ({ onNavigate }) => {
     };
   }, []);
 
-  const handleCellClick = (rowIndex, colIndex) => {
-    setSelectedCell({ row: rowIndex, col: colIndex });
-  };
-
-  const handleCellDoubleClick = (rowIndex, colIndex) => {
-    setEditingCell({ row: rowIndex, col: colIndex });
-  };
-
-  const handleCellEdit = (rowIndex, colIndex, value) => {
-    const newData = [...tableData];
-    newData[rowIndex][colIndex] = value;
-    setTableData(newData);
-    setEditingCell(null);
-  };
-
   const addRow = () => {
-    const newRow = columns.map(() => '');
-    setTableData([...tableData, newRow]);
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.alter('insert_row', hotInstanceRef.current.countRows());
+    }
   };
 
   const addColumn = () => {
-    const newColumnName = `column_${columns.length + 1}`;
-    const newColumns = [...columns, { id: newColumnName, name: newColumnName, type: 'text' }];
-    setColumns(newColumns);
-    
-    const newData = tableData.map(row => [...row, '']);
-    setTableData(newData);
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.alter('insert_col', hotInstanceRef.current.countCols());
+    }
   };
 
-  const deleteRow = (rowIndex) => {
-    const newData = tableData.filter((_, index) => index !== rowIndex);
-    setTableData(newData);
+  const undoAction = () => {
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.undo();
+    }
   };
 
-  const deleteColumn = (colIndex) => {
-    const newColumns = columns.filter((_, index) => index !== colIndex);
-    setColumns(newColumns);
-    
-    const newData = tableData.map(row => row.filter((_, index) => index !== colIndex));
-    setTableData(newData);
+  const redoAction = () => {
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.redo();
+    }
   };
 
   const createNewItems = [
@@ -401,7 +445,7 @@ const SpreadsheetPage = ({ onNavigate }) => {
                   />
                 </div>
                 <div className="spreadsheet-actions">
-                  <button className="action-button">
+                  <button className="action-button" onClick={undoAction}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
                       <path d="M21 3v5h-5"></path>
@@ -410,7 +454,7 @@ const SpreadsheetPage = ({ onNavigate }) => {
                     </svg>
                     Undo
                   </button>
-                  <button className="action-button">
+                  <button className="action-button" onClick={redoAction}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
                       <path d="M3 21v-5h5"></path>
@@ -436,110 +480,9 @@ const SpreadsheetPage = ({ onNavigate }) => {
 
               <div className="select-cell-indicator">Select cell</div>
 
-              {/* Spreadsheet Table */}
+              {/* Handsontable Container */}
               <div className="spreadsheet-table-container">
-                <table className="spreadsheet-table">
-                  <thead>
-                    <tr className="table-header-row">
-                      <th className="row-number-header"></th>
-                      <th className="checkbox-header">
-                        <input type="checkbox" />
-                      </th>
-                      {columns.map((column, index) => (
-                        <th key={column.id} className="column-header">
-                          <div className="column-header-content">
-                            <span className="column-name">{column.name}</span>
-                            <div className="column-actions">
-                              <button className="column-action-btn">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </th>
-                      ))}
-                      <th className="add-column-header">
-                        <button className="add-column-btn" onClick={addColumn}>
-                          + Add column
-                        </button>
-                      </th>
-                    </tr>
-                    <tr className="filter-row">
-                      <td className="filter-cell"></td>
-                      <td className="filter-cell"></td>
-                      {columns.map((column, index) => (
-                        <td key={column.id} className="filter-cell">
-                          <div className="filter-controls">
-                            <button className="filter-btn">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
-                              </svg>
-                            </button>
-                            <button className="sort-btn">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <line x1="3" y1="12" x2="21" y2="12"></line>
-                                <line x1="3" y1="18" x2="21" y2="18"></line>
-                              </svg>
-                            </button>
-                            <button className="grid-btn">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                              </svg>
-                            </button>
-                            <button className="search-btn">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      ))}
-                      <td className="filter-cell"></td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableData.map((row, rowIndex) => (
-                      <tr key={rowIndex} className={`data-row ${selectedCell.row === rowIndex ? 'selected-row' : ''}`}>
-                        <td className="row-number">{rowIndex + 1}</td>
-                        <td className="row-checkbox">
-                          <input type="checkbox" />
-                        </td>
-                        {row.map((cell, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className={`data-cell ${selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected-cell' : ''}`}
-                            onClick={() => handleCellClick(rowIndex, colIndex)}
-                            onDoubleClick={() => handleCellDoubleClick(rowIndex, colIndex)}
-                          >
-                            {editingCell && editingCell.row === rowIndex && editingCell.col === colIndex ? (
-                              <input
-                                type="text"
-                                value={cell}
-                                onChange={(e) => handleCellEdit(rowIndex, colIndex, e.target.value)}
-                                onBlur={() => setEditingCell(null)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    setEditingCell(null);
-                                  }
-                                }}
-                                autoFocus
-                                className="cell-input"
-                              />
-                            ) : (
-                              <span className="cell-content">{cell}</span>
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div ref={handsontableRef} className="handsontable-container"></div>
               </div>
 
               {/* Add Row Button */}
