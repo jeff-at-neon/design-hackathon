@@ -7,6 +7,26 @@ import './SQLQueryDrawer.css';
 
 const SQLQueryDrawer = ({ isOpen, onClose, query, tableName }) => {
   const [currentQueryIndex, setCurrentQueryIndex] = React.useState(0);
+  const [openMenuIndex, setOpenMenuIndex] = React.useState(null);
+
+  // Set aggregated query as default when drawer opens
+  React.useEffect(() => {
+    if (isOpen) {
+      setCurrentQueryIndex(2); // Index 2 is the "Aggregated Query"
+    }
+  }, [isOpen]);
+
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      setOpenMenuIndex(null);
+    };
+
+    if (openMenuIndex !== null) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [openMenuIndex]);
   
   // Define the 3 query versions
   const queryVersions = [
@@ -18,26 +38,50 @@ FROM main.default.merchant_payment_data;`
     },
     {
       title: "Filtered Query", 
-      description: "Data filtered to August",
+      description: "Data filtered to September 2025",
       query: `SELECT *
-FROM main.default.merchant_payment_data
-WHERE MONTH(transaction_date) = 8;`
+FROM main.default.order_data
+WHERE created_at >= '2025-09-01' 
+  AND created_at <= '2025-09-30';`
     },
     {
       title: "Aggregated Query",
-      description: "Price aggregated by country",
+      description: "Total price aggregated by country",
       query: `SELECT 
-    country,
-    SUM(price) as total_price,
-    AVG(price) as average_price,
-    COUNT(*) as transaction_count
-FROM main.default.merchant_payment_data
+    country as Country,
+    SUM(CAST(total_price AS DECIMAL)) as SUM_Total_Price
+FROM main.default.order_data
 GROUP BY country
-ORDER BY total_price DESC;`
+ORDER BY SUM(CAST(total_price AS DECIMAL)) DESC;`
     }
   ];
   
   const currentQuery = queryVersions[currentQueryIndex];
+
+  const handleMenuToggle = (index, event) => {
+    event.stopPropagation();
+    setOpenMenuIndex(openMenuIndex === index ? null : index);
+  };
+
+  const handleMenuAction = (action, index, event) => {
+    event.stopPropagation();
+    console.log(`${action} for query ${index}:`, queryVersions[index].title);
+    setOpenMenuIndex(null);
+    
+    // Handle specific actions
+    switch (action) {
+      case 'save':
+        // Save query logic
+        break;
+      case 'run':
+        // Run query logic
+        break;
+      case 'revert':
+        // Revert to this query
+        setCurrentQueryIndex(index);
+        break;
+    }
+  };
   // Simple SQL syntax highlighting using React elements
   const renderHighlightedSQL = (sql) => {
     if (!sql) return 'No query available';
@@ -162,8 +206,40 @@ ORDER BY total_price DESC;`
                     >
                       <div className="query-item-header">
                         <div className="query-item-title">{queryVersion.title}</div>
-                        <div className="query-item-time">
-                          {getTimeLabel(originalIndex)}
+                        <div className="query-item-actions">
+                          <div className="query-item-time">
+                            {getTimeLabel(originalIndex)}
+                          </div>
+                          <div className="query-menu-container">
+                            <button 
+                              className="query-menu-button"
+                              onClick={(e) => handleMenuToggle(originalIndex, e)}
+                            >
+                              ⋮
+                            </button>
+                            {openMenuIndex === originalIndex && (
+                              <div className="query-menu-dropdown">
+                                <button 
+                                  className="menu-item"
+                                  onClick={(e) => handleMenuAction('save', originalIndex, e)}
+                                >
+                                  Save query
+                                </button>
+                                <button 
+                                  className="menu-item"
+                                  onClick={(e) => handleMenuAction('run', originalIndex, e)}
+                                >
+                                  Run query
+                                </button>
+                                <button 
+                                  className="menu-item"
+                                  onClick={(e) => handleMenuAction('revert', originalIndex, e)}
+                                >
+                                  Revert
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="query-item-description">{queryVersion.description}</div>
@@ -172,12 +248,6 @@ ORDER BY total_price DESC;`
                 })}
               </div>
             </div>
-          </div>
-
-          <div className="sql-drawer-footer">
-            <button className="save-query-btn">
-              Save query
-            </button>
           </div>
         </div>
       </div>

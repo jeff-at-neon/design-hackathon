@@ -43,11 +43,16 @@ import 'handsontable/styles/handsontable.min.css';
 import 'handsontable/styles/ht-theme-main.min.css';
 import SpreadsheetSourceModal from './components/SpreadsheetSourceModal';
 import SQLQueryDrawer from './components/SQLQueryDrawer';
+import AggregateDataModal from './components/AggregateDataModal';
+import TimeRangeFilterModal from './components/TimeRangeFilterModal';
+import ShareModal from './components/ShareModal';
 import './AgentsPage.css';
 import './HomePage.css';
 import './SpreadsheetPage.css';
 import sampleData from './data/sampleData.json';
 import sampleColumns from './data/columns.json';
+import aggregatedData from './data/aggregated/aggregated_sept.json';
+import aggregatedColumns from './data/aggregated/columns.json';
 
 const SpreadsheetPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -57,6 +62,12 @@ const SpreadsheetPage = ({ onNavigate }) => {
   const [showNewPopover, setShowNewPopover] = useState(false);
   const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
   const [showSQLDrawer, setShowSQLDrawer] = useState(false);
+  const [showAggregateModal, setShowAggregateModal] = useState(false);
+  const [aggregateColumn, setAggregateColumn] = useState('');
+  const [showTimeRangeModal, setShowTimeRangeModal] = useState(false);
+  const [timeRangeColumn, setTimeRangeColumn] = useState('');
+  const [timeRangeColumnIndex, setTimeRangeColumnIndex] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [currentQuery, setCurrentQuery] = useState(`SELECT 
     order_id,
     created_at,
@@ -79,21 +90,9 @@ LIMIT 1000;`);
     const initialSheets = [
       {
         id: 'sheet-1',
-        name: 'Sheet1',
+        name: tableName,
         data: sampleData,
         columns: sampleColumns
-      },
-      {
-        id: 'sheet-2',
-        name: 'Sheet2',
-        data: Array(10).fill().map(() => Array(5).fill('')),
-        columns: [
-          { id: 'col_1', name: 'A', type: 'text' },
-          { id: 'col_2', name: 'B', type: 'text' },
-          { id: 'col_3', name: 'C', type: 'text' },
-          { id: 'col_4', name: 'D', type: 'text' },
-          { id: 'col_5', name: 'E', type: 'text' }
-        ]
       }
     ];
 
@@ -112,6 +111,16 @@ LIMIT 1000;`);
       }
     };
   }, []);
+
+  // Update page title when active sheet changes
+  useEffect(() => {
+    if (activeSheetId && sheets.length > 0) {
+      const activeSheet = sheets.find(s => s.id === activeSheetId);
+      if (activeSheet) {
+        setTableName(activeSheet.name);
+      }
+    }
+  }, [activeSheetId, sheets]);
 
   // Helper function to initialize Handsontable
   const initializeHandsontable = (sheet) => {
@@ -133,7 +142,31 @@ LIMIT 1000;`);
       undoRedo: true,
       columnSorting: true,
       filters: true,
-      dropdownMenu: true,
+      dropdownMenu: {
+        items: {
+          'aggregate_data': {
+            name: 'Aggregate data',
+            callback: function(key, selection, clickEvent) {
+              const column = selection[0].start.col;
+              // Get column name from the sheet's columns array
+              const columnName = sheet.columns?.[column]?.name || `Column ${column + 1}`;
+              handleColumnAggregate(columnName);
+            }
+          },
+          'filter_by_time_range': {
+            name: 'Filter by time range',
+            callback: function(key, selection, clickEvent) {
+              const column = selection[0].start.col;
+              handleTimeRangeFilter(column);
+            }
+          },
+          'filter_by_condition': {},
+          'filter_operators': {},
+          'filter_by_condition2': {},
+          'filter_by_value': {},
+          'filter_action_bar': {}
+        }
+      },
       manualColumnResize: true,
       manualRowResize: true,
       stretchH: 'all',
@@ -194,9 +227,10 @@ LIMIT 1000;`);
 
   const addNewSheet = () => {
     const newSheetId = `sheet-${Date.now()}`;
+    const newSheetName = `Sheet${sheets.length + 1}`;
     const newSheet = {
       id: newSheetId,
-      name: `Sheet${sheets.length + 1}`,
+      name: newSheetName,
       data: Array(10).fill().map(() => Array(5).fill('')),
       columns: [
         { id: 'col_1', name: 'A', type: 'text' },
@@ -324,6 +358,99 @@ ORDER BY total_amount DESC;`;
     }
   };
 
+  const handleColumnAggregate = (columnName) => {
+    setAggregateColumn(columnName);
+    setShowAggregateModal(true);
+  };
+
+  const handleTimeRangeFilter = (columnIndex) => {
+    // Get the active sheet and column info
+    const activeSheet = sheets.find(s => s.id === activeSheetId);
+    const columnName = activeSheet?.columns[columnIndex]?.name || `Column ${columnIndex + 1}`;
+    
+    // Set the column info and show the modal
+    setTimeRangeColumn(columnName);
+    setTimeRangeColumnIndex(columnIndex);
+    setShowTimeRangeModal(true);
+  };
+
+  const handleApplyTimeRangeFilter = (filterConfig) => {
+    const { startDate, endDate } = filterConfig;
+    
+    if (startDate && endDate && hotInstanceRef.current && timeRangeColumnIndex !== null) {
+      // Apply custom filter logic
+      const plugin = hotInstanceRef.current.getPlugin('filters');
+      
+      // Clear existing filters for this column
+      plugin.removeConditions(timeRangeColumnIndex);
+      
+      // Add date range condition
+      // For better date filtering, we'll use a custom condition
+      plugin.addCondition(timeRangeColumnIndex, 'between', [startDate, endDate]);
+      plugin.filter();
+      
+      console.log(`Applied time range filter to ${filterConfig.columnName}: ${startDate} to ${endDate}`);
+    }
+  };
+
+
+  const handleAggregateData = (aggregationConfig) => {
+    console.log('Aggregating data:', aggregationConfig);
+    
+    // Convert aggregated data to array format for Handsontable (excluding country code)
+    const aggregatedDataArray = aggregatedData.map(row => [
+      row.country_name,
+      row.total_revenue
+    ]);
+    
+    // Create new sheet with aggregated data
+    const newSheetId = `sheet-${Date.now()}`;
+    const newSheetName = `${aggregationConfig.aggregation} by ${aggregationConfig.groupBy}`;
+    
+    // Create dynamic column names based on aggregation (excluding country code)
+    const dynamicColumns = [
+      {
+        id: "country_name", 
+        name: "Country",
+        type: "text"
+      },
+      {
+        id: "aggregated_value",
+        name: `${aggregationConfig.aggregation}(${aggregationConfig.column})`,
+        type: "text"
+      }
+    ];
+    
+    const newSheet = {
+      id: newSheetId,
+      name: newSheetName,
+      data: aggregatedDataArray,
+      columns: dynamicColumns
+    };
+    
+    // Add the new sheet
+    setSheets(prevSheets => [...prevSheets, newSheet]);
+    setActiveSheetId(newSheetId);
+    
+    // Generate new SQL query with aggregation that reflects the actual data structure
+    const newQuery = `SELECT 
+    country as Country,
+    ${aggregationConfig.aggregation}(CAST(total_price AS DECIMAL)) as ${aggregationConfig.aggregation}_Total_Price
+FROM main.default.order_data
+GROUP BY country
+ORDER BY ${aggregationConfig.aggregation}(CAST(total_price AS DECIMAL)) DESC;`;
+    
+    setCurrentQuery(newQuery);
+    setTableName(newSheetName);
+    
+    // Initialize Handsontable with new sheet after a brief delay
+    setTimeout(() => {
+      initializeHandsontable(newSheet);
+    }, 100);
+    
+    setShowAggregateModal(false);
+  };
+
   const toggleNewPopover = () => {
     setShowNewPopover(!showNewPopover);
   };
@@ -342,27 +469,9 @@ ORDER BY total_amount DESC;`;
     };
   }, []);
 
-  const addRow = () => {
-    if (hotInstanceRef.current) {
-      hotInstanceRef.current.alter('insert_row', hotInstanceRef.current.countRows());
-    }
-  };
-
   const addColumn = () => {
     if (hotInstanceRef.current) {
       hotInstanceRef.current.alter('insert_col', hotInstanceRef.current.countCols());
-    }
-  };
-
-  const undoAction = () => {
-    if (hotInstanceRef.current) {
-      hotInstanceRef.current.undo();
-    }
-  };
-
-  const redoAction = () => {
-    if (hotInstanceRef.current) {
-      hotInstanceRef.current.redo();
     }
   };
 
@@ -613,29 +722,11 @@ ORDER BY total_amount DESC;`;
                     />
                   </div>
                   <div className="spreadsheet-actions">
-                    <button className="action-button" onClick={undoAction}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                        <path d="M21 3v5h-5"></path>
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                        <path d="M3 21v-5h5"></path>
-                      </svg>
-                      Undo
-                    </button>
-                    <button className="action-button" onClick={redoAction}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                        <path d="M3 21v-5h5"></path>
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                        <path d="M21 3v5h-5"></path>
-                      </svg>
-                      Redo
-                    </button>
                     <button className="action-button" onClick={() => setShowSQLDrawer(true)}>
                       <CodeIcon />
                       View SQL
                     </button>
-                    <button className="action-button">
+                    <button className="action-button" onClick={() => setShowShareModal(true)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
                         <polyline points="16,6 12,2 8,6"></polyline>
@@ -704,12 +795,6 @@ ORDER BY total_amount DESC;`;
                   <div ref={handsontableRef} className="handsontable-container"></div>
                 </div>
 
-                {/* Add Row Button */}
-                <div className="add-row-container">
-                  <button className="add-row-btn" onClick={addRow}>
-                    + Add row
-                  </button>
-                </div>
               </div>
 
               {/* SQL Query Drawer */}
@@ -728,6 +813,30 @@ ORDER BY total_amount DESC;`;
           isOpen={showSpreadsheetModal}
           onClose={() => setShowSpreadsheetModal(false)}
           onSelect={handleSpreadsheetSourceSelect}
+        />
+
+        {/* Aggregate Data Modal */}
+        <AggregateDataModal
+          isOpen={showAggregateModal}
+          onClose={() => setShowAggregateModal(false)}
+          columnName={aggregateColumn}
+          availableColumns={sheets.find(s => s.id === activeSheetId)?.columns?.map(col => col.name) || []}
+          onAggregate={handleAggregateData}
+        />
+
+        {/* Time Range Filter Modal */}
+        <TimeRangeFilterModal
+          isOpen={showTimeRangeModal}
+          onClose={() => setShowTimeRangeModal(false)}
+          columnName={timeRangeColumn}
+          onApplyFilter={handleApplyTimeRangeFilter}
+        />
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          tableName={tableName}
         />
       </DesignSystemThemeProvider>
     </DesignSystemProvider>

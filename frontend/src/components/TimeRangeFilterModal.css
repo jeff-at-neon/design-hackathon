@@ -1,0 +1,180 @@
+/* Time Range Filter Modal */
+.time-range-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.time-range-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 480px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/* Header */
+.time-range-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 10px 24px;
+  background-color: #ffffff;
+}
+
+.time-range-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.time-range-modal-close {
+  padding: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.time-range-modal-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Content */
+.time-range-modal-content {
+  padding: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.time-range-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.time-range-form-row .time-range-form-section {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.time-range-form-section {
+  margin-bottom: 20px;
+}
+
+.time-range-form-section:last-child {
+  margin-bottom: 0;
+}
+
+.time-range-form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.time-range-column-display {
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  height: 38px;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.time-range-column-display .column-name {
+  font-weight: normal;
+}
+
+.time-range-date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 13px;
+  color: #374151;
+  height: 38px;
+  box-sizing: border-box;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.time-range-date-input:hover {
+  border-color: #9ca3af;
+}
+
+.time-range-date-input:focus {
+  outline: none;
+  border-color: #4172B0;
+  box-shadow: 0 0 0 3px rgba(65, 114, 176, 0.1);
+}
+
+/* Footer */
+.time-range-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+/* Custom button styling for Apply Filter button */
+.time-range-modal-footer button:last-child {
+  background-color: #2272B4 !important;
+  border-color: #2272B4 !important;
+  color: white !important;
+}
+
+.time-range-modal-footer button:last-child:hover:not(:disabled) {
+  background-color: #1e5a8a !important;
+  border-color: #1e5a8a !important;
+  color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .time-range-modal {
+    width: 95vw;
+    margin: 20px;
+  }
+  
+  .time-range-modal-header {
+    padding: 16px 20px 8px 20px;
+  }
+  
+  .time-range-modal-content {
+    padding: 20px;
+  }
+  
+  .time-range-modal-footer {
+    padding: 12px 20px;
+  }
+  
+  .time-range-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .time-range-form-row .time-range-form-section {
+    margin-bottom: 20px;
+  }
+}

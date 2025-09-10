@@ -1,0 +1,233 @@
+/* Share Modal */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.share-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 480px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/* Header */
+.share-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 10px 24px;
+  background-color: #ffffff;
+}
+
+.share-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.share-modal-close {
+  padding: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.share-modal-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Content */
+.share-modal-content {
+  padding: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.share-form-section {
+  margin-bottom: 20px;
+}
+
+.share-form-section:last-child {
+  margin-bottom: 0;
+}
+
+.share-form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.share-spreadsheet-display {
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  height: 38px;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.share-spreadsheet-display .spreadsheet-name {
+  font-weight: normal;
+}
+
+/* Input Fields */
+.share-email-input,
+.share-permission-select,
+.share-link-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 13px;
+  color: #374151;
+  box-sizing: border-box;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.share-email-input,
+.share-permission-select {
+  height: 38px;
+}
+
+.share-email-input:hover,
+.share-permission-select:hover,
+.share-link-input:hover {
+  border-color: #9ca3af;
+}
+
+.share-email-input:focus,
+.share-permission-select:focus,
+.share-link-input:focus {
+  outline: none;
+  border-color: #4172B0;
+  box-shadow: 0 0 0 3px rgba(65, 114, 176, 0.1);
+}
+
+/* Link sharing section */
+.share-link-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.share-link-input {
+  flex: 1;
+  background-color: #f8f9fa;
+}
+
+.share-copy-button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.share-copy-button:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.share-copy-button:focus {
+  outline: none;
+  border-color: #4172B0;
+  box-shadow: 0 0 0 3px rgba(65, 114, 176, 0.1);
+}
+
+/* Footer */
+.share-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+/* Custom button styling for Share button */
+.share-modal-footer button:last-child {
+  background-color: #2272B4 !important;
+  border-color: #2272B4 !important;
+  color: white !important;
+}
+
+.share-modal-footer button:last-child:hover:not(:disabled) {
+  background-color: #1e5a8a !important;
+  border-color: #1e5a8a !important;
+  color: white !important;
+}
+
+/* Scrollbar for content */
+.share-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.share-modal-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.share-modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.share-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .share-modal {
+    width: 95vw;
+    margin: 20px;
+  }
+  
+  .share-modal-header {
+    padding: 16px 20px 8px 20px;
+  }
+  
+  .share-modal-content {
+    padding: 20px;
+  }
+  
+  .share-modal-footer {
+    padding: 12px 20px;
+  }
+  
+  .share-link-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .share-copy-button {
+    width: 100%;
+  }
+}

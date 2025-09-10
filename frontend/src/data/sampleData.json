@@ -4,489 +4,489 @@
     "created_at": "2025-09-01T14:23:45Z",
     "customer_email": "alice@example.com",
     "total_price": "79.97",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1002,
     "created_at": "2025-09-02T10:12:00Z",
     "customer_email": "bob.smith@example.com",
     "total_price": "149.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1003,
     "created_at": "2025-09-03T16:45:30Z",
     "customer_email": "carol.davis@example.com",
     "total_price": "89.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1004,
     "created_at": "2025-09-04T09:30:15Z",
     "customer_email": "david.wilson@example.com",
     "total_price": "199.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1005,
     "created_at": "2025-09-05T13:20:45Z",
     "customer_email": "eve.brown@example.com",
     "total_price": "299.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1006,
     "created_at": "2025-09-06T11:15:22Z",
     "customer_email": "frank.miller@example.com",
     "total_price": "59.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1007,
     "created_at": "2025-09-07T15:40:18Z",
     "customer_email": "grace.taylor@example.com",
     "total_price": "179.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1008,
     "created_at": "2025-09-08T08:25:33Z",
     "customer_email": "henry.anderson@example.com",
     "total_price": "129.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1009,
     "created_at": "2025-09-09T12:50:27Z",
     "customer_email": "iris.thomas@example.com",
     "total_price": "249.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1010,
     "created_at": "2025-09-10T14:35:41Z",
     "customer_email": "jack.jackson@example.com",
     "total_price": "99.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1011,
     "created_at": "2025-09-11T10:20:16Z",
     "customer_email": "karen.white@example.com",
     "total_price": "159.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1012,
     "created_at": "2025-09-12T16:10:52Z",
     "customer_email": "leo.harris@example.com",
     "total_price": "89.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1013,
     "created_at": "2025-09-13T09:45:38Z",
     "customer_email": "mary.martin@example.com",
     "total_price": "219.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1014,
     "created_at": "2025-09-14T13:30:24Z",
     "customer_email": "nick.garcia@example.com",
     "total_price": "179.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1015,
     "created_at": "2025-09-15T11:55:19Z",
     "customer_email": "olivia.martinez@example.com",
     "total_price": "139.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1016,
     "created_at": "2025-09-16T15:15:43Z",
     "customer_email": "paul.robinson@example.com",
     "total_price": "199.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1017,
     "created_at": "2025-09-17T08:40:31Z",
     "customer_email": "quinn.clark@example.com",
     "total_price": "79.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1018,
     "created_at": "2025-09-18T12:25:47Z",
     "customer_email": "rachel.rodriguez@example.com",
     "total_price": "259.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1019,
     "created_at": "2025-09-19T14:50:22Z",
     "customer_email": "steve.lewis@example.com",
     "total_price": "119.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1020,
     "created_at": "2025-09-20T10:35:58Z",
     "customer_email": "tina.lee@example.com",
     "total_price": "189.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1021,
     "created_at": "2025-09-21T16:20:14Z",
     "customer_email": "ulrich.mueller@example.com",
     "total_price": "199.99",
-    "country": "DE"
+    "country": "Germany"
   },
   {
     "order_id": 1022,
     "created_at": "2025-09-22T09:45:29Z",
     "customer_email": "victoria.brown@example.com",
     "total_price": "149.99",
-    "country": "GB"
+    "country": "United Kingdom"
   },
   {
     "order_id": 1023,
     "created_at": "2025-09-23T13:30:45Z",
     "customer_email": "william.taylor@example.com",
     "total_price": "179.99",
-    "country": "CA"
+    "country": "Canada"
   },
   {
     "order_id": 1024,
     "created_at": "2025-09-24T11:15:33Z",
     "customer_email": "xavier.garcia@example.com",
     "total_price": "219.99",
-    "country": "FR"
+    "country": "France"
   },
   {
     "order_id": 1025,
     "created_at": "2025-09-25T15:50:27Z",
     "customer_email": "yuki.sato@example.com",
     "total_price": "159.99",
-    "country": "JP"
+    "country": "Japan"
   },
   {
     "order_id": 1026,
     "created_at": "2025-09-26T08:25:41Z",
     "customer_email": "zoe.anderson@example.com",
     "total_price": "189.99",
-    "country": "AU"
+    "country": "Australia"
   },
   {
     "order_id": 1027,
     "created_at": "2025-09-27T12:40:18Z",
     "customer_email": "alex.martinez@example.com",
     "total_price": "139.99",
-    "country": "ES"
+    "country": "Spain"
   },
   {
     "order_id": 1028,
     "created_at": "2025-09-28T14:55:32Z",
     "customer_email": "beatrice.rossi@example.com",
     "total_price": "199.99",
-    "country": "IT"
+    "country": "Italy"
   },
   {
     "order_id": 1029,
     "created_at": "2025-09-29T10:20:46Z",
     "customer_email": "carlos.mendoza@example.com",
     "total_price": "169.99",
-    "country": "BR"
+    "country": "Brazil"
   },
   {
     "order_id": 1030,
     "created_at": "2025-09-30T16:35:21Z",
     "customer_email": "ahmed.hassan@example.com",
     "total_price": "99.99",
-    "country": "AE"
+    "country": "United Arab Emirates"
   },
   {
     "order_id": 1031,
     "created_at": "2025-10-01T13:20:15Z",
     "customer_email": "grace.walker@example.com",
     "total_price": "209.98",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1032,
     "created_at": "2025-10-02T09:45:28Z",
     "customer_email": "noah.hall@example.com",
     "total_price": "329.97",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1033,
     "created_at": "2025-10-03T11:30:42Z",
     "customer_email": "ava.young@example.com",
     "total_price": "399.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1034,
     "created_at": "2025-10-04T14:15:33Z",
     "customer_email": "liam.king@example.com",
     "total_price": "899.87",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1035,
     "created_at": "2025-10-05T16:50:19Z",
     "customer_email": "sophia.wright@example.com",
     "total_price": "179.94",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1036,
     "created_at": "2025-10-06T08:25:47Z",
     "customer_email": "mason.lopez@example.com",
     "total_price": "299.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1037,
     "created_at": "2025-10-07T12:40:25Z",
     "customer_email": "isabella.hill@example.com",
     "total_price": "239.98",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1038,
     "created_at": "2025-10-08T15:35:14Z",
     "customer_email": "ethan.scott@example.com",
     "total_price": "844.96",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1039,
     "created_at": "2025-10-09T10:20:38Z",
     "customer_email": "mia.green@example.com",
     "total_price": "129.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1040,
     "created_at": "2025-10-10T13:55:21Z",
     "customer_email": "alexander.adams@example.com",
     "total_price": "1899.98",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1041,
     "created_at": "2025-10-11T11:15:44Z",
     "customer_email": "charlotte.baker@example.com",
     "total_price": "289.96",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1042,
     "created_at": "2025-10-12T14:30:17Z",
     "customer_email": "benjamin.nelson@example.com",
     "total_price": "79.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1043,
     "created_at": "2025-10-13T09:45:32Z",
     "customer_email": "amelia.carter@example.com",
     "total_price": "249.98",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1044,
     "created_at": "2025-10-14T16:20:29Z",
     "customer_email": "lucas.mitchell@example.com",
     "total_price": "269.96",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1045,
     "created_at": "2025-10-15T12:10:55Z",
     "customer_email": "harper.perez@example.com",
     "total_price": "179.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1046,
     "created_at": "2025-10-16T08:35:41Z",
     "customer_email": "henry.roberts@example.com",
     "total_price": "349.97",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1047,
     "created_at": "2025-10-17T15:50:23Z",
     "customer_email": "evelyn.turner@example.com",
     "total_price": "89.99",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1048,
     "created_at": "2025-10-18T11:25:37Z",
     "customer_email": "sebastian.phillips@example.com",
     "total_price": "429.98",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1049,
     "created_at": "2025-10-19T13:40:16Z",
     "customer_email": "william.campbell@example.com",
     "total_price": "99.95",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1050,
     "created_at": "2025-10-20T10:15:48Z",
     "customer_email": "olivia.parker@example.com",
     "total_price": "134.96",
-    "country": "US"
+    "country": "United States"
   },
   {
     "order_id": 1051,
     "created_at": "2025-10-21T14:30:22Z",
     "customer_email": "hiroshi.tanaka@example.com",
     "total_price": "449.98",
-    "country": "JP"
+    "country": "Japan"
   },
   {
     "order_id": 1052,
     "created_at": "2025-10-22T09:15:45Z",
     "customer_email": "maria.silva@example.com",
     "total_price": "159.98",
-    "country": "PT"
+    "country": "Portugal"
   },
   {
     "order_id": 1053,
     "created_at": "2025-10-23T16:45:33Z",
     "customer_email": "raj.patel@example.com",
     "total_price": "249.98",
-    "country": "IN"
+    "country": "India"
   },
   {
     "order_id": 1054,
     "created_at": "2025-10-24T11:20:18Z",
     "customer_email": "klaus.mueller@example.com",
     "total_price": "269.98",
-    "country": "DE"
+    "country": "Germany"
   },
   {
     "order_id": 1055,
     "created_at": "2025-10-25T13:55:27Z",
     "customer_email": "sofia.andersson@example.com",
     "total_price": "129.99",
-    "country": "SE"
+    "country": "Sweden"
   },
   {
     "order_id": 1056,
     "created_at": "2025-10-26T08:40:14Z",
     "customer_email": "chen.wei@example.com",
     "total_price": "199.97",
-    "country": "CN"
+    "country": "China"
   },
   {
     "order_id": 1057,
     "created_at": "2025-10-27T15:25:41Z",
     "customer_email": "giuseppe.rossi@example.com",
     "total_price": "389.98",
-    "country": "IT"
+    "country": "Italy"
   },
   {
     "order_id": 1058,
     "created_at": "2025-10-28T12:10:36Z",
     "customer_email": "pierre.dubois@example.com",
     "total_price": "279.98",
-    "country": "FR"
+    "country": "France"
   },
   {
     "order_id": 1059,
     "created_at": "2025-10-29T10:35:52Z",
     "customer_email": "yuki.sato@example.com",
     "total_price": "209.96",
-    "country": "JP"
+    "country": "Japan"
   },
   {
     "order_id": 1060,
     "created_at": "2025-10-30T14:20:29Z",
     "customer_email": "ahmed.alrashid@example.com",
     "total_price": "1019.98",
-    "country": "SA"
+    "country": "Saudi Arabia"
   },
   {
     "order_id": 1061,
     "created_at": "2025-10-31T16:45:17Z",
     "customer_email": "emma.thompson@example.com",
     "total_price": "339.98",
-    "country": "GB"
+    "country": "United Kingdom"
   },
   {
     "order_id": 1062,
     "created_at": "2025-11-01T09:30:44Z",
     "customer_email": "carlos.mendoza@example.com",
     "total_price": "289.97",
-    "country": "MX"
+    "country": "Mexico"
   },
   {
     "order_id": 1063,
     "created_at": "2025-11-02T11:15:33Z",
     "customer_email": "anna.kowalski@example.com",
     "total_price": "99.99",
-    "country": "PL"
+    "country": "Poland"
   },
   {
     "order_id": 1064,
     "created_at": "2025-11-03T13:50:26Z",
     "customer_email": "lars.hansen@example.com",
     "total_price": "649.98",
-    "country": "DK"
+    "country": "Denmark"
   },
   {
     "order_id": 1065,
     "created_at": "2025-11-04T15:25:19Z",
     "customer_email": "isabella.garcia@example.com",
     "total_price": "229.98",
-    "country": "ES"
+    "country": "Spain"
   },
   {
     "order_id": 1066,
     "created_at": "2025-11-05T08:40:37Z",
     "customer_email": "vladimir.petrov@example.com",
     "total_price": "209.98",
-    "country": "RU"
+    "country": "Russia"
   },
   {
     "order_id": 1067,
     "created_at": "2025-11-06T12:55:21Z",
     "customer_email": "hassan.ibrahim@example.com",
     "total_price": "149.99",
-    "country": "EG"
+    "country": "Egypt"
   },
   {
     "order_id": 1068,
     "created_at": "2025-11-07T14:20:48Z",
     "customer_email": "minjun.kim@example.com",
     "total_price": "279.97",
-    "country": "KR"
+    "country": "South Korea"
   },
   {
     "order_id": 1069,
     "created_at": "2025-11-08T10:35:15Z",
     "customer_email": "mohammed.alzahra@example.com",
     "total_price": "159.98",
-    "country": "MA"
+    "country": "Morocco"
   },
   {
     "order_id": 1070,
     "created_at": "2025-11-09T16:10:42Z",
     "customer_email": "aisha.okafor@example.com",
     "total_price": "299.98",
-    "country": "NG"
+    "country": "Nigeria"
   }
 ]
