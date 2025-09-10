@@ -1,0 +1,59 @@
+[
+    {
+      "country": "US",
+      "country_name": "United States",
+      "total_revenue": 2969.83
+    },
+    {
+      "country": "DE",
+      "country_name": "Germany",
+      "total_revenue": 199.99
+    },
+    {
+      "country": "GB",
+      "country_name": "United Kingdom",
+      "total_revenue": 149.99
+    },
+    {
+      "country": "CA",
+      "country_name": "Canada",
+      "total_revenue": 179.99
+    },
+    {
+      "country": "FR",
+      "country_name": "France",
+      "total_revenue": 219.99
+    },
+    {
+      "country": "JP",
+      "country_name": "Japan",
+      "total_revenue": 159.99
+    },
+    {
+      "country": "AU",
+      "country_name": "Australia",
+      "total_revenue": 189.99
+    },
+    {
+      "country": "ES",
+      "country_name": "Spain",
+      "total_revenue": 139.99
+    },
+    {
+      "country": "IT",
+      "country_name": "Italy",
+      "total_revenue": 199.99
+    },
+    {
+      "country": "BR",
+      "country_name": "Brazil",
+      "total_revenue": 169.99
+    },
+    {
+      "country": "AE",
+      "country_name": "United Arab Emirates",
+      "total_revenue": 99.99
+    }
+  ]
+  
+  
