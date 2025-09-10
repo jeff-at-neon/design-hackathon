@@ -1,0 +1,768 @@
+/* Databricks Design System Semantic Color Variables */
+:root {
+  /* Primitive Colors */
+  --blue100: #F0F8FF;
+  --blue200: #D7EDFE;
+  --blue300: #BAE1FC;
+  --blue400: #8ACAFF;
+  --blue500: #4299E0;
+  --blue600: #2272B4;
+  --blue700: #0E538B;
+  --blue800: #04355D;
+  --grey050: #F6F7F9;
+  --grey100: #E8ECF0;
+  --grey200: #D1D9E1;
+  --grey300: #C0CDD8;
+  --grey350: #92A4B3;
+  --grey400: #8396A5;
+  --grey500: #5F7281;
+  --grey600: #445461;
+  --grey650: #37444F;
+  --grey700: #1F272D;
+  --grey800: #11171C;
+  --red100: #FFF5F7;
+  --red200: #FDE2E8;
+  --red300: #FBD0D8;
+  --red500: #E65B77;
+  --red600: #C82D4C;
+  --green100: #F3FCF6;
+  --green500: #3CAA60;
+  --green600: #277C43;
+  --yellow100: #FFF9EB;
+  --yellow300: #F8D4A5;
+  --yellow500: #FACB66;
+  --white: #FFFFFF;
+
+  /* Text Colors (Light Theme) */
+  --text-primary: var(--grey800);
+  --text-secondary: var(--grey500);
+  --text-placeholder: var(--grey400);
+  --text-validation-success: var(--green500);
+  --text-validation-warning: var(--yellow500);
+  --text-validation-danger: var(--red500);
+
+  /* Background Colors (Light Theme) */
+  --background-primary: var(--white);
+  --background-secondary: var(--grey050);
+  --background-danger: var(--red100);
+  --background-success: var(--green100);
+  --background-warning: var(--yellow100);
+
+  /* Border Colors (Light Theme) */
+  --border: rgb(232, 236, 240);
+  --border-accessible: var(--grey500);
+  --border-danger: var(--red300);
+  --border-warning: var(--yellow300);
+
+  /* Action Colors - Primary (Light Theme) */
+  --action-primary-background-default: var(--blue600);
+  --action-primary-background-hover: var(--blue700);
+  --action-primary-background-press: var(--blue800);
+  --action-primary-text-default: var(--white);
+  --action-primary-text-hover: var(--white);
+  --action-primary-text-press: var(--white);
+  --action-primary-icon: var(--white);
+
+  /* Action Colors - Default (Light Theme) */
+  --action-default-background-default: rgba(34, 114, 180, 0.0000);
+  --action-default-background-hover: rgba(34, 114, 180, 0.0800);
+  --action-default-background-press: rgba(34, 114, 180, 0.1600);
+  --action-default-text-default: var(--grey800);
+  --action-default-text-hover: var(--blue700);
+  --action-default-text-press: var(--blue800);
+  --action-default-icon-default: var(--grey600);
+  --action-default-icon-hover: var(--blue700);
+  --action-default-icon-press: var(--blue800);
+  --action-default-border-default: var(--grey300);
+  --action-default-border-hover: var(--blue600);
+  --action-default-border-press: var(--blue800);
+  --action-default-border-focus: var(--blue600);
+
+  /* Action Colors - Tertiary (Light Theme) */
+  --action-tertiary-background-default: rgba(34, 114, 180, 0.0000);
+  --action-tertiary-background-hover: rgba(34, 114, 180, 0.0800);
+  --action-tertiary-background-press: rgba(34, 114, 180, 0.1600);
+  --action-tertiary-text-default: var(--blue600);
+  --action-tertiary-text-hover: var(--blue700);
+  --action-tertiary-text-press: var(--blue800);
+  --action-tertiary-icon-default: var(--blue600);
+  --action-tertiary-icon-hover: var(--blue700);
+  --action-tertiary-icon-press: var(--blue800);
+
+  /* Action Colors - Icon (Light Theme) */
+  --action-icon-background-default: rgba(34, 114, 180, 0.0000);
+  --action-icon-background-hover: rgba(34, 114, 180, 0.0800);
+  --action-icon-background-press: rgba(34, 114, 180, 0.1600);
+  --action-icon-icon-default: var(--grey600);
+  --action-icon-icon-hover: var(--blue700);
+  --action-icon-icon-press: var(--blue800);
+
+  /* Action Colors - Link (Light Theme) */
+  --action-link-default: var(--blue600);
+  --action-link-hover: var(--blue700);
+  --action-link-press: var(--blue800);
+
+  /* Action Colors - Disabled (Light Theme) */
+  --action-disabled-background: var(--grey100);
+  --action-disabled-border: var(--grey200);
+  --action-disabled-text: var(--grey350);
+
+  /* Action Colors - Danger (Light Theme) */
+  --action-danger-default-background-default: rgba(200, 45, 76, 0.0000);
+  --action-danger-default-background-hover: rgba(200, 45, 76, 0.0800);
+  --action-danger-default-background-press: rgba(200, 45, 76, 0.1600);
+  --action-danger-default-text-default: var(--red600);
+  --action-danger-default-text-hover: var(--red500);
+  --action-danger-default-text-press: var(--red600);
+  --action-danger-default-border-default: var(--red600);
+  --action-danger-default-border-hover: var(--red500);
+  --action-danger-default-border-press: var(--red600);
+  --action-danger-primary-background-default: var(--red600);
+  --action-danger-primary-background-hover: var(--red500);
+  --action-danger-primary-background-press: var(--red600);
+  --action-danger-primary-text: var(--white);
+
+  /* Other Semantic Colors (Light Theme) */
+  --code-background: rgba(68, 83, 95, 0.0800);
+  --overlay-overlay: rgba(0, 0, 0, 0.45);
+  --progress-fill: var(--blue600);
+  --progress-track: var(--grey100);
+  --skeleton: var(--grey100);
+  --table-background-selected-default: var(--blue100);
+  --table-background-selected-hover: var(--blue200);
+  --table-background-unselected-default: var(--white);
+  --table-background-unselected-hover: var(--grey050);
+}
+
+/* Playground Container */
+.playground-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--background-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Main Layout */
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Top Bar */
+.top-bar {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--background-secondary);
+  flex-shrink: 0;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  width: 32px;
+  height: 32px;
+  color: var(--text-secondary);
+}
+
+.menu-button:hover {
+  background-color: var(--action-default-background-hover);
+  color: var(--text-primary);
+}
+
+.menu-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-right: 32px;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon img {
+  height: 18px;
+  width: auto;
+  display: block;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 55%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  padding-left: 40px;
+  padding-right: 60px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--action-primary-background-default);
+  box-shadow: 0 0 0 1px var(--action-primary-background-default);
+}
+
+.search-shortcut {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-button:hover {
+  background-color: var(--action-default-background-hover);
+}
+
+.icon-button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.sparkle-button {
+  color: var(--text-secondary);
+}
+
+.sparkle-button:hover {
+  color: var(--text-primary);
+}
+
+.sparkle-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.user-avatar {
+  padding: 0;
+}
+
+.avatar-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8A63BF 0%, #6B46C1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.avatar-text {
+  color: var(--white);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 200px;
+  background-color: var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  padding: 8px;
+}
+
+.new-button {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #FCEAEA;
+  border: 1px solid #FADCDC;
+  border-radius: 8px;
+  color: #2D3748;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.new-button:hover {
+  background-color: #FADCDC;
+  border-color: #F8C8C8;
+}
+
+.new-button svg {
+  width: 16px;
+  height: 16px;
+  fill: rgb(255, 73, 73) !important;
+  color: rgb(255, 73, 73) !important;
+}
+
+.section-header {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  margin-bottom: 0px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover {
+  background-color: var(--action-default-background-hover);
+}
+
+.nav-item.active {
+  background-color: var(--action-default-background-press);
+  color: var(--action-primary-background-default);
+  font-weight: 500;
+}
+
+.nav-icon {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+}
+
+.nav-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.nav-label {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.nav-item:hover .nav-icon {
+  color: var(--text-primary);
+}
+
+.nav-item:hover .nav-label {
+  color: var(--text-primary);
+}
+
+.nav-item.active .nav-icon,
+.nav-item.active .nav-label {
+  color: var(--action-primary-background-default);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+}
+
+/* Playground Content */
+.playground-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(232, 236, 240);
+  border-radius: 6px;
+  background-color: var(--background-primary);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* Playground Header */
+.playground-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.playground-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Model Selection */
+.model-selection {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  align-items: center;
+}
+
+.model-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.model-button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.model-button:hover {
+  background-color: var(--background-secondary);
+}
+
+.model-button svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-secondary);
+  fill: currentColor;
+}
+
+.custom-select-wrapper {
+  position: relative;
+}
+
+.custom-select {
+  width: 200px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--background-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.custom-select:focus {
+  border-color: var(--action-primary-background-default);
+  box-shadow: 0 0 0 1px var(--action-primary-background-default);
+}
+
+.custom-select:hover {
+  border-color: var(--action-primary-background-default);
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  width: 32px;
+  height: 32px;
+  color: var(--text-secondary);
+}
+
+.settings-button:hover {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+.settings-button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Chat Input - Old styles removed */
+
+/* Chat Input */
+.chat-input-container {
+  margin-top: 16px;
+}
+
+.chat-input-wrapper {
+  background-color: var(--background-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chat-input-header {
+  margin-bottom: 12px;
+}
+
+.chat-input-field {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: none;
+  min-height: 20px;
+  font-family: inherit;
+}
+
+.chat-input-field:focus {
+  outline: none;
+}
+
+.chat-input-wrapper:focus-within {
+  border-color: var(--action-primary-background-default);
+  box-shadow: 0 0 0 1px var(--action-primary-background-default);
+}
+
+.chat-input-field::placeholder {
+  color: var(--text-secondary);
+}
+
+.chat-input-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-tools-button {
+  align-self: flex-start;
+}
+
+.action-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-icons .icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  width: 32px;
+  height: 32px;
+  color: var(--text-secondary);
+}
+
+.action-icons .icon-button:hover {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+.action-icons .icon-button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Secondary Button Icon Styling */
+button[type="secondary"] svg,
+.btn-secondary svg,
+[data-component-id*="secondary"] svg {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+}
+
+/* Specific styling for the add tools button icon */
+.add-tools-button svg {
+  color: var(--text-secondary) !important;
+  fill: var(--text-secondary) !important;
+}
+
+/* Chat Workspace */
+.chat-workspace {
+  flex: 1;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-placeholder {
+  color: var(--text-secondary);
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 240px;
+  }
+  
+  .playground-content {
+    padding: 16px;
+  }
+  
+  .model-selection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .model-select {
+    width: 100%;
+  }
+} 
+
+.custom-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 8px;
+} 
+
+/* Typography Classes */
+.typography-body {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.typography-semibold {
+  font-weight: 600;
+}
+
+.typography-bold {
+  font-weight: 700;
+}
+
+/* Model Selection */ 
