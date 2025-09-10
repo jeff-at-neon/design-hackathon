@@ -458,3 +458,107 @@
     margin-right: 0;
   }
 }
+
+/* Sheet Tabs Styles */
+.sheet-tabs-container {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+
+.sheet-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 40px;
+}
+
+.sheet-tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  position: relative;
+  min-width: 80px;
+  max-width: 200px;
+  transition: all 0.2s ease;
+}
+
+.sheet-tab:hover {
+  background: #f8f9fa;
+}
+
+.sheet-tab.active {
+  background: #ffffff;
+  border-bottom: 1px solid #ffffff;
+  z-index: 1;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sheet-tab-name {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet-tab-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #333;
+  padding: 0;
+}
+
+.sheet-tab-close {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.sheet-tab-close:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.add-sheet-btn {
+  margin-left: 8px;
+  background: none;
+  border: 1px dashed #ccc;
+  color: #666;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+}
+
+.add-sheet-btn:hover {
+  background: #f8f9fa;
+  border-color: #999;
+  color: #333;
+}
+
+.add-sheet-btn svg {
+  width: 16px;
+  height: 16px;
+}

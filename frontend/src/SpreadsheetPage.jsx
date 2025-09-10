@@ -51,8 +51,8 @@ import sampleColumns from './data/columns.json';
 
 const SpreadsheetPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [tableData, setTableData] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [sheets, setSheets] = useState([]);
+  const [activeSheetId, setActiveSheetId] = useState(null);
   const [tableName, setTableName] = useState('order_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
   const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
@@ -67,65 +67,42 @@ FROM main.default.order_data
 WHERE created_at >= '2025-09-01'
 ORDER BY order_id DESC
 LIMIT 1000;`);
+  const [editingSheetId, setEditingSheetId] = useState(null);
+  const [editingSheetName, setEditingSheetName] = useState('');
   const popoverRef = useRef(null);
   const handsontableRef = useRef(null);
   const hotInstanceRef = useRef(null);
 
-  // Initialize with imported sample data
+  // Initialize with sample data and create initial sheets
   useEffect(() => {
-    setTableData(sampleData);
-    setColumns(sampleColumns);
-
-    // Initialize Handsontable
-    if (handsontableRef.current && !hotInstanceRef.current) {
-      hotInstanceRef.current = new Handsontable(handsontableRef.current, {
+    // Create initial sheets
+    const initialSheets = [
+      {
+        id: 'sheet-1',
+        name: 'Sheet1',
         data: sampleData,
-        colHeaders: sampleColumns.map(col => col.name),
-        rowHeaders: true,
-        width: '100%',
-        height: 'auto',
-        licenseKey: 'non-commercial-and-evaluation',
-        themeName: 'ht-theme-main',
-        contextMenu: true,
-        copyPaste: true,
-        fillHandle: true,
-        undoRedo: true,
-        columnSorting: true,
-        filters: true,
-        dropdownMenu: true,
-        manualColumnResize: true,
-        manualRowResize: true,
-        stretchH: 'all',
-        afterChange: (changes, source) => {
-          if (source !== 'loadData') {
-            setTableData(hotInstanceRef.current.getData());
-          }
-        },
-        afterCreateRow: (index, amount) => {
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterRemoveRow: (index, amount) => {
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterCreateCol: (index, amount) => {
-          const newColumns = [...columns];
-          for (let i = 0; i < amount; i++) {
-            newColumns.splice(index + i, 0, {
-              id: `column_${Date.now()}_${i}`,
-              name: `Column ${index + i + 1}`,
-              type: 'text'
-            });
-          }
-          setColumns(newColumns);
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterRemoveCol: (index, amount) => {
-          const newColumns = [...columns];
-          newColumns.splice(index, amount);
-          setColumns(newColumns);
-          setTableData(hotInstanceRef.current.getData());
-        }
-      });
+        columns: sampleColumns
+      },
+      {
+        id: 'sheet-2',
+        name: 'Sheet2',
+        data: Array(10).fill().map(() => Array(5).fill('')),
+        columns: [
+          { id: 'col_1', name: 'A', type: 'text' },
+          { id: 'col_2', name: 'B', type: 'text' },
+          { id: 'col_3', name: 'C', type: 'text' },
+          { id: 'col_4', name: 'D', type: 'text' },
+          { id: 'col_5', name: 'E', type: 'text' }
+        ]
+      }
+    ];
+
+    setSheets(initialSheets);
+    setActiveSheetId('sheet-1');
+
+    // Initialize Handsontable with the first sheet
+    if (handsontableRef.current && !hotInstanceRef.current) {
+      initializeHandsontable(initialSheets[0]);
     }
 
     return () => {
@@ -135,6 +112,165 @@ LIMIT 1000;`);
       }
     };
   }, []);
+
+  // Helper function to initialize Handsontable
+  const initializeHandsontable = (sheet) => {
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.destroy();
+    }
+
+    hotInstanceRef.current = new Handsontable(handsontableRef.current, {
+      data: sheet.data,
+      colHeaders: sheet.columns.map(col => col.name),
+      rowHeaders: true,
+      width: '100%',
+      height: 'auto',
+      licenseKey: 'non-commercial-and-evaluation',
+      themeName: 'ht-theme-main',
+      contextMenu: true,
+      copyPaste: true,
+      fillHandle: true,
+      undoRedo: true,
+      columnSorting: true,
+      filters: true,
+      dropdownMenu: true,
+      manualColumnResize: true,
+      manualRowResize: true,
+      stretchH: 'all',
+      afterChange: (changes, source) => {
+        if (source !== 'loadData') {
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      },
+      afterCreateRow: (index, amount) => {
+        updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+      },
+      afterRemoveRow: (index, amount) => {
+        updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+      },
+      afterCreateCol: (index, amount) => {
+        const activeSheet = sheets.find(s => s.id === activeSheetId);
+        if (activeSheet) {
+          const newColumns = [...activeSheet.columns];
+          for (let i = 0; i < amount; i++) {
+            newColumns.splice(index + i, 0, {
+              id: `column_${Date.now()}_${i}`,
+              name: `Column ${index + i + 1}`,
+              type: 'text'
+            });
+          }
+          updateSheetColumns(activeSheetId, newColumns);
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      },
+      afterRemoveCol: (index, amount) => {
+        const activeSheet = sheets.find(s => s.id === activeSheetId);
+        if (activeSheet) {
+          const newColumns = [...activeSheet.columns];
+          newColumns.splice(index, amount);
+          updateSheetColumns(activeSheetId, newColumns);
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      }
+    });
+  };
+
+  // Helper functions for sheet management
+  const updateSheetData = (sheetId, data) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, data } : sheet
+      )
+    );
+  };
+
+  const updateSheetColumns = (sheetId, columns) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, columns } : sheet
+      )
+    );
+  };
+
+  const addNewSheet = () => {
+    const newSheetId = `sheet-${Date.now()}`;
+    const newSheet = {
+      id: newSheetId,
+      name: `Sheet${sheets.length + 1}`,
+      data: Array(10).fill().map(() => Array(5).fill('')),
+      columns: [
+        { id: 'col_1', name: 'A', type: 'text' },
+        { id: 'col_2', name: 'B', type: 'text' },
+        { id: 'col_3', name: 'C', type: 'text' },
+        { id: 'col_4', name: 'D', type: 'text' },
+        { id: 'col_5', name: 'E', type: 'text' }
+      ]
+    };
+    
+    setSheets(prevSheets => [...prevSheets, newSheet]);
+    setActiveSheetId(newSheetId);
+    
+    // Reinitialize Handsontable with new sheet
+    setTimeout(() => {
+      initializeHandsontable(newSheet);
+    }, 100);
+  };
+
+  const switchToSheet = (sheetId) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      setActiveSheetId(sheetId);
+      setTimeout(() => {
+        initializeHandsontable(sheet);
+      }, 100);
+    }
+  };
+
+  const renameSheet = (sheetId, newName) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, name: newName } : sheet
+      )
+    );
+  };
+
+  const startRenamingSheet = (sheetId, currentName) => {
+    setEditingSheetId(sheetId);
+    setEditingSheetName(currentName);
+  };
+
+  const finishRenamingSheet = () => {
+    if (editingSheetId && editingSheetName.trim()) {
+      renameSheet(editingSheetId, editingSheetName.trim());
+    }
+    setEditingSheetId(null);
+    setEditingSheetName('');
+  };
+
+  const cancelRenamingSheet = () => {
+    setEditingSheetId(null);
+    setEditingSheetName('');
+  };
+
+  const handleSheetNameKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      finishRenamingSheet();
+    } else if (e.key === 'Escape') {
+      cancelRenamingSheet();
+    }
+  };
+
+  const deleteSheet = (sheetId) => {
+    if (sheets.length <= 1) return; // Don't delete the last sheet
+    
+    setSheets(prevSheets => prevSheets.filter(sheet => sheet.id !== sheetId));
+    
+    // Switch to first remaining sheet
+    const remainingSheets = sheets.filter(sheet => sheet.id !== sheetId);
+    if (remainingSheets.length > 0) {
+      switchToSheet(remainingSheets[0].id);
+    }
+  };
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -495,10 +631,6 @@ ORDER BY total_amount DESC;`;
                       </svg>
                       Redo
                     </button>
-                    <button className="action-button enrich-button">
-                      <LightningIcon />
-                      Enrich
-                    </button>
                     <button className="action-button" onClick={() => setShowSQLDrawer(true)}>
                       <CodeIcon />
                       View SQL
@@ -511,10 +643,61 @@ ORDER BY total_amount DESC;`;
                       </svg>
                       Share
                     </button>
+                    <button className="action-button enrich-button">
+                      <LightningIcon />
+                      Enrich
+                    </button>
                   </div>
                 </div>
 
-                <div className="select-cell-indicator">Select cell</div>
+                {/* Sheet Tabs */}
+                <div className="sheet-tabs-container">
+                  <div className="sheet-tabs">
+                    {sheets.map((sheet) => (
+                      <div
+                        key={sheet.id}
+                        className={`sheet-tab ${activeSheetId === sheet.id ? 'active' : ''}`}
+                        onClick={() => switchToSheet(sheet.id)}
+                      >
+                        {editingSheetId === sheet.id ? (
+                          <input
+                            type="text"
+                            value={editingSheetName}
+                            onChange={(e) => setEditingSheetName(e.target.value)}
+                            onBlur={finishRenamingSheet}
+                            onKeyDown={handleSheetNameKeyDown}
+                            className="sheet-tab-input"
+                            autoFocus
+                          />
+                        ) : (
+                          <span 
+                            className="sheet-tab-name"
+                            onDoubleClick={(e) => {
+                              e.stopPropagation();
+                              startRenamingSheet(sheet.id, sheet.name);
+                            }}
+                          >
+                            {sheet.name}
+                          </span>
+                        )}
+                        {sheets.length > 1 && (
+                          <button
+                            className="sheet-tab-close"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteSheet(sheet.id);
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button className="add-sheet-btn" onClick={addNewSheet}>
+                      <PlusIcon />
+                    </button>
+                  </div>
+                </div>
 
                 {/* Handsontable Container */}
                 <div className="spreadsheet-table-container">
