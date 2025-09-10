@@ -1,0 +1,213 @@
+.typography-showcase {
+  min-height: 100vh;
+  background-color: var(--background-secondary);
+  padding: 24px;
+}
+
+.showcase-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background-primary);
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.typography-section {
+  margin-bottom: 48px;
+}
+
+.typography-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.typography-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.example {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.example > *:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.example code {
+  background-color: var(--background-primary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  white-space: nowrap;
+}
+
+/* Typography Variants */
+.typography-h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-h2 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-h3 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-h4 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-h5 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-h6 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-body {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.typography-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.typography-code {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+  background-color: var(--background-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  margin: 0;
+}
+
+.typography-link {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--action-link-text-default);
+  text-decoration: none;
+  margin: 0;
+}
+
+.typography-link:hover {
+  color: var(--action-link-text-hover);
+  text-decoration: underline;
+}
+
+/* Font Weights */
+.typography-regular {
+  font-weight: 400;
+}
+
+.typography-medium {
+  font-weight: 500;
+}
+
+.typography-semibold {
+  font-weight: 600;
+}
+
+.typography-bold {
+  font-weight: 700;
+}
+
+/* Color Variants */
+.typography-color-primary {
+  color: var(--action-primary-background-default);
+}
+
+.typography-color-secondary {
+  color: var(--text-secondary);
+}
+
+.typography-color-success {
+  color: var(--text-validation-success);
+}
+
+.typography-color-warning {
+  color: var(--text-validation-warning);
+}
+
+.typography-color-danger {
+  color: var(--text-validation-danger);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .typography-showcase {
+    padding: 16px;
+  }
+  
+  .showcase-content {
+    padding: 24px;
+  }
+  
+  .example {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .example code {
+    align-self: flex-start;
+  }
+} 
