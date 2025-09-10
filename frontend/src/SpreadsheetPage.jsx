@@ -49,8 +49,8 @@ import './SpreadsheetPage.css';
 
 const SpreadsheetPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [tableData, setTableData] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [sheets, setSheets] = useState([]);
+  const [activeSheetId, setActiveSheetId] = useState(null);
   const [tableName, setTableName] = useState('merchant_payment_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
   const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
@@ -65,23 +65,29 @@ FROM main.default.merchant_payment_data
 WHERE year >= 2023
 ORDER BY psp_reference DESC
 LIMIT 1000;`);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [editingSheetId, setEditingSheetId] = useState(null);
+  const [editingSheetName, setEditingSheetName] = useState('');
+  const [showTimeFilter, setShowTimeFilter] = useState(false);
+  const [timeFilterStart, setTimeFilterStart] = useState('');
+  const [timeFilterEnd, setTimeFilterEnd] = useState('');
   const popoverRef = useRef(null);
   const handsontableRef = useRef(null);
   const hotInstanceRef = useRef(null);
 
-  // Initialize with sample data similar to the Handsontable demo
+  // Initialize with sample data and create initial sheets
   useEffect(() => {
     const sampleData = [
-      ['20034594130', 'Crossfit_Hanna', 'NexPay', '2023', '16'],
-      ['36926127356', 'Belles_cookbook_store', 'GlobalCard', '2023', '23'],
-      ['31114608278', 'Golfclub_Baron_Friso', 'SwiftCharge', '2023', '4'],
-      ['45678912345', 'Martinis_Fine_Steakhouse', 'TransactPlus', '2023', '3'],
-      ['78912345678', 'Rafa_Al', 'NexPay', '2023', '17'],
-      ['12345678901', 'Tech_Startup_Co', 'GlobalCard', '2023', '8'],
-      ['98765432109', 'Coffee_Bean_Corner', 'SwiftCharge', '2023', '6'],
-      ['55566677788', 'Fashion_Boutique', 'TransactPlus', '2023', '20'],
-      ['11122233344', 'Bookstore_Plus', 'NexPay', '2023', '22'],
-      ['99988877766', 'Gym_Fitness_Center', 'GlobalCard', '2023', '21']
+      ['20034594130', 'Crossfit_Hanna', 'NexPay', '2023', '16', '2024-01-15 14:30:25'],
+      ['36926127356', 'Belles_cookbook_store', 'GlobalCard', '2023', '23', '2024-01-15 15:45:12'],
+      ['31114608278', 'Golfclub_Baron_Friso', 'SwiftCharge', '2023', '4', '2024-01-16 09:20:45'],
+      ['45678912345', 'Martinis_Fine_Steakhouse', 'TransactPlus', '2023', '3', '2024-01-16 12:15:30'],
+      ['78912345678', 'Rafa_Al', 'NexPay', '2023', '17', '2024-01-17 08:30:15'],
+      ['12345678901', 'Tech_Startup_Co', 'GlobalCard', '2023', '8', '2024-01-17 11:45:22'],
+      ['98765432109', 'Coffee_Bean_Corner', 'SwiftCharge', '2023', '6', '2024-01-18 13:20:18'],
+      ['55566677788', 'Fashion_Boutique', 'TransactPlus', '2023', '20', '2024-01-18 16:30:45'],
+      ['11122233344', 'Bookstore_Plus', 'NexPay', '2023', '22', '2024-01-19 10:15:33'],
+      ['99988877766', 'Gym_Fitness_Center', 'GlobalCard', '2023', '21', '2024-01-19 14:45:27']
     ];
 
     const sampleColumns = [
@@ -89,62 +95,47 @@ LIMIT 1000;`);
       { id: 'merchant', name: 'merchant', type: 'text' },
       { id: 'card_scheme', name: 'card_scheme', type: 'text' },
       { id: 'year', name: 'year', type: 'text' },
-      { id: 'hour', name: 'hour', type: 'text' }
+      { id: 'hour', name: 'hour', type: 'text' },
+      { id: 'timestamp', name: 'timestamp', type: 'datetime' }
     ];
 
-    setTableData(sampleData);
-    setColumns(sampleColumns);
-
-    // Initialize Handsontable
-    if (handsontableRef.current && !hotInstanceRef.current) {
-      hotInstanceRef.current = new Handsontable(handsontableRef.current, {
+    // Create initial sheets
+    const initialSheets = [
+      {
+        id: 'sheet-1',
+        name: 'Sheet1',
         data: sampleData,
-        colHeaders: sampleColumns.map(col => col.name),
-        rowHeaders: true,
-        width: '100%',
-        height: 'auto',
-        licenseKey: 'non-commercial-and-evaluation',
-        themeName: 'ht-theme-main',
-        contextMenu: true,
-        copyPaste: true,
-        fillHandle: true,
-        undoRedo: true,
-        columnSorting: true,
-        filters: true,
-        dropdownMenu: true,
-        manualColumnResize: true,
-        manualRowResize: true,
-        stretchH: 'all',
-        afterChange: (changes, source) => {
-          if (source !== 'loadData') {
-            setTableData(hotInstanceRef.current.getData());
-          }
-        },
-        afterCreateRow: (index, amount) => {
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterRemoveRow: (index, amount) => {
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterCreateCol: (index, amount) => {
-          const newColumns = [...columns];
-          for (let i = 0; i < amount; i++) {
-            newColumns.splice(index + i, 0, {
-              id: `column_${Date.now()}_${i}`,
-              name: `Column ${index + i + 1}`,
-              type: 'text'
-            });
-          }
-          setColumns(newColumns);
-          setTableData(hotInstanceRef.current.getData());
-        },
-        afterRemoveCol: (index, amount) => {
-          const newColumns = [...columns];
-          newColumns.splice(index, amount);
-          setColumns(newColumns);
-          setTableData(hotInstanceRef.current.getData());
-        }
-      });
+        columns: sampleColumns,
+        formulas: {}
+      },
+      {
+        id: 'sheet-2',
+        name: 'Sheet2',
+        data: [
+          ['', '', '', '', '', ''],
+          ['', '', '', '', '', ''],
+          ['', '', '', '', '', ''],
+          ['', '', '', '', '', ''],
+          ['', '', '', '', '', '']
+        ],
+        columns: [
+          { id: 'col_1', name: 'A', type: 'text' },
+          { id: 'col_2', name: 'B', type: 'text' },
+          { id: 'col_3', name: 'C', type: 'text' },
+          { id: 'col_4', name: 'D', type: 'text' },
+          { id: 'col_5', name: 'E', type: 'text' },
+          { id: 'col_6', name: 'F', type: 'datetime' }
+        ],
+        formulas: {}
+      }
+    ];
+
+    setSheets(initialSheets);
+    setActiveSheetId('sheet-1');
+
+    // Initialize Handsontable with the first sheet
+    if (handsontableRef.current && !hotInstanceRef.current) {
+      initializeHandsontable(initialSheets[0]);
     }
 
     return () => {
@@ -154,6 +145,212 @@ LIMIT 1000;`);
       }
     };
   }, []);
+
+  // Helper function to initialize Handsontable
+  const initializeHandsontable = (sheet) => {
+    if (hotInstanceRef.current) {
+      hotInstanceRef.current.destroy();
+    }
+
+    hotInstanceRef.current = new Handsontable(handsontableRef.current, {
+      data: sheet.data,
+      colHeaders: sheet.columns.map(col => col.name),
+      rowHeaders: true,
+      width: '100%',
+      height: 'auto',
+      licenseKey: 'non-commercial-and-evaluation',
+      themeName: 'ht-theme-main',
+      contextMenu: true,
+      copyPaste: true,
+      fillHandle: true,
+      undoRedo: true,
+      columnSorting: true,
+      filters: true,
+      dropdownMenu: true,
+      manualColumnResize: true,
+      manualRowResize: true,
+      stretchH: 'all',
+      columns: sheet.columns.map(col => ({
+        data: col.data,
+        type: col.type === 'datetime' ? 'date' : 'text',
+        dateFormat: col.type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : undefined,
+        filter: col.type === 'datetime' ? 'date' : 'text'
+      })),
+      formulas: {
+        engine: 'hyperformula',
+        sheetReferences: sheets.reduce((acc, s) => {
+          acc[s.name] = s.data;
+          return acc;
+        }, {})
+      },
+      afterChange: (changes, source) => {
+        if (source !== 'loadData') {
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      },
+      afterCreateRow: (index, amount) => {
+        updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+      },
+      afterRemoveRow: (index, amount) => {
+        updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+      },
+      afterCreateCol: (index, amount) => {
+        const activeSheet = sheets.find(s => s.id === activeSheetId);
+        if (activeSheet) {
+          const newColumns = [...activeSheet.columns];
+          for (let i = 0; i < amount; i++) {
+            newColumns.splice(index + i, 0, {
+              id: `column_${Date.now()}_${i}`,
+              name: `Column ${index + i + 1}`,
+              type: 'text'
+            });
+          }
+          updateSheetColumns(activeSheetId, newColumns);
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      },
+      afterRemoveCol: (index, amount) => {
+        const activeSheet = sheets.find(s => s.id === activeSheetId);
+        if (activeSheet) {
+          const newColumns = [...activeSheet.columns];
+          newColumns.splice(index, amount);
+          updateSheetColumns(activeSheetId, newColumns);
+          updateSheetData(activeSheetId, hotInstanceRef.current.getData());
+        }
+      }
+    });
+  };
+
+  // Helper functions for sheet management
+  const updateSheetData = (sheetId, data) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, data } : sheet
+      )
+    );
+  };
+
+  const updateSheetColumns = (sheetId, columns) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, columns } : sheet
+      )
+    );
+  };
+
+  const addNewSheet = () => {
+    const newSheetId = `sheet-${Date.now()}`;
+    const newSheet = {
+      id: newSheetId,
+      name: `Sheet${sheets.length + 1}`,
+      data: [
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', '']
+      ],
+      columns: [
+        { id: 'col_1', name: 'A', type: 'text' },
+        { id: 'col_2', name: 'B', type: 'text' },
+        { id: 'col_3', name: 'C', type: 'text' },
+        { id: 'col_4', name: 'D', type: 'text' },
+        { id: 'col_5', name: 'E', type: 'text' },
+        { id: 'col_6', name: 'F', type: 'datetime' }
+      ],
+      formulas: {}
+    };
+    
+    setSheets(prevSheets => [...prevSheets, newSheet]);
+    setActiveSheetId(newSheetId);
+    
+    // Reinitialize Handsontable with new sheet
+    setTimeout(() => {
+      initializeHandsontable(newSheet);
+    }, 100);
+  };
+
+  const switchToSheet = (sheetId) => {
+    const sheet = sheets.find(s => s.id === sheetId);
+    if (sheet) {
+      setActiveSheetId(sheetId);
+      setTimeout(() => {
+        initializeHandsontable(sheet);
+      }, 100);
+    }
+  };
+
+  const renameSheet = (sheetId, newName) => {
+    setSheets(prevSheets => 
+      prevSheets.map(sheet => 
+        sheet.id === sheetId ? { ...sheet, name: newName } : sheet
+      )
+    );
+  };
+
+  const startRenamingSheet = (sheetId, currentName) => {
+    setEditingSheetId(sheetId);
+    setEditingSheetName(currentName);
+  };
+
+  const finishRenamingSheet = () => {
+    if (editingSheetId && editingSheetName.trim()) {
+      renameSheet(editingSheetId, editingSheetName.trim());
+    }
+    setEditingSheetId(null);
+    setEditingSheetName('');
+  };
+
+  const cancelRenamingSheet = () => {
+    setEditingSheetId(null);
+    setEditingSheetName('');
+  };
+
+  const handleSheetNameKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      finishRenamingSheet();
+    } else if (e.key === 'Escape') {
+      cancelRenamingSheet();
+    }
+  };
+
+
+  const clearTimeFilter = () => {
+    // Reset to original data (you might want to store original data separately)
+    const activeSheet = sheets.find(s => s.id === activeSheetId);
+    if (activeSheet) {
+      // For now, we'll reinitialize with sample data
+      // In a real app, you'd want to store the original unfiltered data
+      const sampleData = [
+        ['20034594130', 'Crossfit_Hanna', 'NexPay', '2023', '16', '2024-01-15 14:30:25'],
+        ['36926127356', 'Belles_cookbook_store', 'GlobalCard', '2023', '23', '2024-01-15 15:45:12'],
+        ['31114608278', 'Golfclub_Baron_Friso', 'SwiftCharge', '2023', '4', '2024-01-16 09:20:45'],
+        ['45678912345', 'Martinis_Fine_Steakhouse', 'TransactPlus', '2023', '3', '2024-01-16 12:15:30'],
+        ['78912345678', 'Rafa_Al', 'NexPay', '2023', '17', '2024-01-17 08:30:15'],
+        ['12345678901', 'Tech_Startup_Co', 'GlobalCard', '2023', '8', '2024-01-17 11:45:22'],
+        ['98765432109', 'Coffee_Bean_Corner', 'SwiftCharge', '2023', '6', '2024-01-18 13:20:18'],
+        ['55566677788', 'Fashion_Boutique', 'TransactPlus', '2023', '20', '2024-01-18 16:30:45'],
+        ['11122233344', 'Bookstore_Plus', 'NexPay', '2023', '22', '2024-01-19 10:15:33'],
+        ['99988877766', 'Gym_Fitness_Center', 'GlobalCard', '2023', '21', '2024-01-19 14:45:27']
+      ];
+      updateSheetData(activeSheetId, sampleData);
+    }
+    setTimeFilterStart('');
+    setTimeFilterEnd('');
+    setShowTimeFilter(false);
+  };
+
+  const deleteSheet = (sheetId) => {
+    if (sheets.length <= 1) return; // Don't delete the last sheet
+    
+    setSheets(prevSheets => prevSheets.filter(sheet => sheet.id !== sheetId));
+    
+    // Switch to first remaining sheet
+    const remainingSheets = sheets.filter(sheet => sheet.id !== sheetId);
+    if (remainingSheets.length > 0) {
+      switchToSheet(remainingSheets[0].id);
+    }
+  };
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -522,13 +719,62 @@ ORDER BY total_amount DESC;`;
                       <CodeIcon />
                       View SQL
                     </button>
-                    <button className="action-button">
+                    <button className="action-button" onClick={() => setShowShareModal(true)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
                         <polyline points="16,6 12,2 8,6"></polyline>
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                       </svg>
                       Share
+                    </button>
+                  </div>
+                </div>
+
+                {/* Sheet Tabs */}
+                <div className="sheet-tabs-container">
+                  <div className="sheet-tabs">
+                    {sheets.map((sheet) => (
+                      <div
+                        key={sheet.id}
+                        className={`sheet-tab ${activeSheetId === sheet.id ? 'active' : ''}`}
+                        onClick={() => switchToSheet(sheet.id)}
+                      >
+                        {editingSheetId === sheet.id ? (
+                          <input
+                            type="text"
+                            value={editingSheetName}
+                            onChange={(e) => setEditingSheetName(e.target.value)}
+                            onBlur={finishRenamingSheet}
+                            onKeyDown={handleSheetNameKeyDown}
+                            className="sheet-tab-input"
+                            autoFocus
+                          />
+                        ) : (
+                          <span 
+                            className="sheet-tab-name"
+                            onDoubleClick={(e) => {
+                              e.stopPropagation();
+                              startRenamingSheet(sheet.id, sheet.name);
+                            }}
+                          >
+                            {sheet.name}
+                          </span>
+                        )}
+                        {sheets.length > 1 && (
+                          <button
+                            className="sheet-tab-close"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteSheet(sheet.id);
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button className="add-sheet-btn" onClick={addNewSheet}>
+                      <PlusIcon />
                     </button>
                   </div>
                 </div>
@@ -565,6 +811,77 @@ ORDER BY total_amount DESC;`;
           onClose={() => setShowSpreadsheetModal(false)}
           onSelect={handleSpreadsheetSourceSelect}
         />
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
+            <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2 className="modal-title">Sharing: {tableName}</h2>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowShareModal(false)}
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="modal-content">
+                <p className="permission-info">
+                  Do you want information about permission levels? <a href="#" className="learn-more-link">Learn more</a>
+                </p>
+                
+                <div className="add-users-section">
+                  <input
+                    type="text"
+                    placeholder="Type to add multiple users, groups or service principals"
+                    className="add-users-input"
+                  />
+                </div>
+                
+                <div className="people-with-access">
+                  <h3 className="section-title">People with access</h3>
+                  
+                  <div className="access-list">
+                    <div className="access-item">
+                      <div className="user-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                      </div>
+                      <span className="user-email">kyle.gilbreath@databricks.com</span>
+                      <span className="permission-level">Can Manage (inherited)</span>
+                    </div>
+                    
+                    <div className="access-item">
+                      <div className="group-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                      </div>
+                      <span className="group-name">Admins</span>
+                      <span className="permission-level">Can Manage (inherited)</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="modal-footer">
+                  <button className="copy-link-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    Copy link
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </DesignSystemThemeProvider>
     </DesignSystemProvider>
   );
