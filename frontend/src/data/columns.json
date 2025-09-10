@@ -1,0 +1,27 @@
+[
+  {
+    "id": "order_id",
+    "name": "Order ID",
+    "type": "text"
+  },
+  {
+    "id": "created_at",
+    "name": "Created At",
+    "type": "text"
+  },
+  {
+    "id": "customer_email",
+    "name": "Customer Email",
+    "type": "text"
+  },
+  {
+    "id": "total_price",
+    "name": "Total Price",
+    "type": "text"
+  },
+  {
+    "id": "country",
+    "name": "Country",
+    "type": "text"
+  }
+]
