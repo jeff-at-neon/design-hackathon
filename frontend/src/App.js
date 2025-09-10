@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Playground from './Playground';
+import AgentsPage from './AgentsPage';
 
 function App() {
   return (
     <div className="App">
-      {/* Main Content - Always show Playground as homepage */}
-      <Playground />
+      {/* Main Content - Always show AgentsPage as homepage */}
+      <AgentsPage />
     </div>
   );
 }
