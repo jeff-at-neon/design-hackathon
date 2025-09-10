@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Button,
   DesignSystemProvider,
@@ -39,6 +39,7 @@ import {
 } from '@databricks/design-system';
 import '@databricks/design-system/dist/index.css';
 import './AgentsPage.css';
+import './HomePage.css';
 import './SpreadsheetPage.css';
 
 const SpreadsheetPage = ({ onNavigate }) => {
@@ -48,6 +49,8 @@ const SpreadsheetPage = ({ onNavigate }) => {
   const [selectedCell, setSelectedCell] = useState({ row: 0, col: 0 });
   const [editingCell, setEditingCell] = useState(null);
   const [tableName, setTableName] = useState('merchant_payment_data');
+  const [showNewPopover, setShowNewPopover] = useState(false);
+  const popoverRef = useRef(null);
 
   // Initialize with sample data similar to the Handsontable demo
   useEffect(() => {
@@ -85,6 +88,31 @@ const SpreadsheetPage = ({ onNavigate }) => {
       onNavigate(page);
     }
   };
+
+  const handleCreateNew = (itemId) => {
+    if (itemId === 'spreadsheet') {
+      handleNavigate('spreadsheet');
+    }
+    setShowNewPopover(false);
+  };
+
+  const toggleNewPopover = () => {
+    setShowNewPopover(!showNewPopover);
+  };
+
+  // Close popover when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setShowNewPopover(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleCellClick = (rowIndex, colIndex) => {
     setSelectedCell({ row: rowIndex, col: colIndex });
@@ -127,6 +155,42 @@ const SpreadsheetPage = ({ onNavigate }) => {
     const newData = tableData.map(row => row.filter((_, index) => index !== colIndex));
     setTableData(newData);
   };
+
+  const createNewItems = [
+    {
+      id: 'notebook',
+      title: 'Notebook',
+      description: 'Develop and run code',
+      icon: <NotebookIcon />
+    },
+    {
+      id: 'query',
+      title: 'Query',
+      description: 'Explore data with SQL',
+      icon: <QueryIcon />
+    },
+    {
+      id: 'dashboard',
+      title: 'Dashboard',
+      description: 'Visualize data',
+      icon: <DashboardIcon />
+    },
+    {
+      id: 'spreadsheet',
+      title: 'Spreadsheet',
+      description: 'Create and edit spreadsheets',
+      icon: <TableIcon />
+    }
+  ];
+
+  const moreItems = [
+    { id: 'job', title: 'Job', icon: <GearIcon /> },
+    { id: 'etl-pipeline', title: 'ETL pipeline', icon: <PipelineIcon /> },
+    { id: 'alert', title: 'Alert', icon: <NotificationIcon /> },
+    { id: 'experiment', title: 'Experiment', icon: <BeakerIcon /> },
+    { id: 'model', title: 'Model', icon: <ModelsIcon /> },
+    { id: 'app', title: 'App', icon: <RocketIcon /> }
+  ];
 
   return (
     <DesignSystemProvider>
@@ -171,8 +235,55 @@ const SpreadsheetPage = ({ onNavigate }) => {
 
           {/* Main Layout */}
           <div className="main-layout">
-            {/* Left Sidebar */}
+            {/* Left Sidebar - Reuse from HomePage */}
             <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+              <div className="sidebar-section">
+                <div className="new-button-container" ref={popoverRef}>
+                  <button className="new-button" onClick={toggleNewPopover}>
+                    <PlusIcon />
+                    New
+                  </button>
+
+                  {showNewPopover && (
+                    <div className="new-popover">
+                      <div className="popover-section">
+                        <div className="section-header">Create new</div>
+                        <div className="create-new-grid">
+                          {createNewItems.map((item) => (
+                            <div key={item.id} className="create-new-item" onClick={() => handleCreateNew(item.id)}>
+                              <div className="item-icon-large">
+                                {item.icon}
+                              </div>
+                              <div className="item-title">{item.title}</div>
+                              <div className="item-description">{item.description}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="popover-divider"></div>
+
+                      <div className="popover-section">
+                        <div className="more-items">
+                          {moreItems.map((item) => (
+                            <div key={item.id} className="more-item">
+                              <div className="more-item-icon">
+                                {item.icon}
+                              </div>
+                              <div className="more-item-title">{item.title}</div>
+                            </div>
+                          ))}
+                          <div className="more-item">
+                            <div className="more-item-title">More</div>
+                            <ChevronDownIcon className="more-chevron" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="sidebar-section">
                 <div className="nav-item" onClick={() => handleNavigate('home')}>
                   <span className="nav-icon"><FolderIcon /></span>
