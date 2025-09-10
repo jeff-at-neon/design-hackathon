@@ -34,8 +34,6 @@ import {
   ChevronDownIcon,
   StarIcon,
   NewWindowIcon,
-  Card,
-  Typography,
   Table,
   TableRow,
   TableCell,
@@ -49,7 +47,6 @@ import { CustomSimpleSelect, CustomSimpleSelectOption } from './components/Custo
 
 const AgentsPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isUseCaseExpanded, setIsUseCaseExpanded] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
   const [ownedByMe, setOwnedByMe] = useState(false);
@@ -63,37 +60,6 @@ const AgentsPage = ({ onNavigate }) => {
       onNavigate(view);
     }
   };
-
-  const useCases = [
-    {
-      id: 'information-extraction',
-      title: 'Information Extraction',
-      description: 'Extract key information, classify content, or summarize text from documents into a structured JSON.',
-      icon: <UserIcon />,
-      hasPdfOption: true
-    },
-    {
-      id: 'custom-llm',
-      title: 'Custom LLM',
-      description: 'Specialize an LLM endpoint to perform custom text tasks (i.e. content generation, chat) aligned within your domain-specific guidelines.',
-      icon: <UserIcon />,
-      hasPdfOption: true
-    },
-    {
-      id: 'knowledge-assistant',
-      title: 'Knowledge Assistant',
-      description: 'Turn your docs into an expert AI chatbot.',
-      icon: <UserIcon />,
-      hasPdfOption: false
-    },
-    {
-      id: 'multi-agent-supervisor',
-      title: 'Multi-Agent Supervisor',
-      description: 'Design an AI system that brings Genie Spaces and Agents together.',
-      icon: <UserIcon />,
-      hasPdfOption: false
-    }
-  ];
 
   const agents = [
     {
@@ -381,49 +347,6 @@ const AgentsPage = ({ onNavigate }) => {
                       Create Agent
                     </Button>
                   </div>
-                </div>
-
-                {/* Choose Your Use Case Section */}
-                <div className="use-case-section">
-                  <button 
-                    className="use-case-header"
-                    onClick={() => setIsUseCaseExpanded(!isUseCaseExpanded)}
-                  >
-                    <ChevronDownIcon className={`chevron ${isUseCaseExpanded ? 'expanded' : ''}`} />
-                    <Typography variant="body" weight="semibold">Choose your use case</Typography>
-                  </button>
-                  
-                  {isUseCaseExpanded && (
-                    <div className="use-case-grid">
-                      {useCases.map((useCase) => (
-                        <Card key={useCase.id} className="use-case-card">
-                          <div className="use-case-content">
-                            <div className="use-case-header-row">
-                              <div className="use-case-icon">
-                                {useCase.icon}
-                              </div>
-                              <Typography variant="body" weight="semibold" className="use-case-title">
-                                {useCase.title}
-                              </Typography>
-                            </div>
-                            <Typography variant="body" className="use-case-description">
-                              {useCase.description}
-                            </Typography>
-                            <div className="use-case-actions">
-                              {useCase.hasPdfOption && (
-                                <Button type="secondary" size="small">
-                                  Use PDFs
-                                </Button>
-                              )}
-                              <Button type="primary" size="small">
-                                Build
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 {/* Agents Table Section */}
