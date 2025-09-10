@@ -58,6 +58,13 @@ const HomePage = ({ onNavigate }) => {
     }
   };
 
+  const handleCreateNew = (itemId) => {
+    if (itemId === 'spreadsheet') {
+      handleNavigate('spreadsheet');
+    }
+    setShowNewPopover(false);
+  };
+
   const toggleNewPopover = () => {
     setShowNewPopover(!showNewPopover);
   };
@@ -254,7 +261,7 @@ const HomePage = ({ onNavigate }) => {
                         <div className="section-header">Create new</div>
                         <div className="create-new-grid">
                           {createNewItems.map((item) => (
-                            <div key={item.id} className="create-new-item">
+                            <div key={item.id} className="create-new-item" onClick={() => handleCreateNew(item.id)}>
                               <div className="item-icon-large">
                                 {item.icon}
                               </div>
