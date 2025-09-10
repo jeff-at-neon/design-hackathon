@@ -90,6 +90,57 @@
   background-color: white;
 }
 
+.handsontable-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom Handsontable styling to match design system */
+.handsontable-container .htCore {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 14px;
+}
+
+.handsontable-container .htCore th {
+  background-color: #f9fafb !important;
+  color: #111827 !important;
+  font-weight: 600 !important;
+  border-color: #e5e7eb !important;
+}
+
+.handsontable-container .htCore td {
+  border-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+.handsontable-container .htCore .htDimmed {
+  background-color: #f9fafb !important;
+}
+
+.handsontable-container .htCore .area {
+  background-color: #dbeafe !important;
+  border-color: #3b82f6 !important;
+}
+
+.handsontable-container .htCore .current {
+  background-color: #dbeafe !important;
+  border-color: #3b82f6 !important;
+}
+
+.handsontable-container .htCore .fill {
+  background-color: #e0f2fe !important;
+}
+
+.handsontable-container .htCore .htContextMenu {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.handsontable-container .htCore .htContextMenu .ht_master .wtHolder {
+  background-color: white !important;
+}
+
 .spreadsheet-table {
   width: 100%;
   border-collapse: collapse;
