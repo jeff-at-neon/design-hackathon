@@ -46,52 +46,33 @@ import SQLQueryDrawer from './components/SQLQueryDrawer';
 import './AgentsPage.css';
 import './HomePage.css';
 import './SpreadsheetPage.css';
+import sampleData from './data/sampleData.json';
+import sampleColumns from './data/columns.json';
 
 const SpreadsheetPage = ({ onNavigate }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [tableName, setTableName] = useState('merchant_payment_data');
+  const [tableName, setTableName] = useState('order_data');
   const [showNewPopover, setShowNewPopover] = useState(false);
   const [showSpreadsheetModal, setShowSpreadsheetModal] = useState(false);
   const [showSQLDrawer, setShowSQLDrawer] = useState(false);
   const [currentQuery, setCurrentQuery] = useState(`SELECT 
-    psp_reference,
-    merchant,
-    card_scheme,
-    year,
-    hour
-FROM main.default.merchant_payment_data
-WHERE year >= 2023
-ORDER BY psp_reference DESC
+    order_id,
+    created_at,
+    customer_email,
+    total_price,
+    country
+FROM main.default.order_data
+WHERE created_at >= '2025-09-01'
+ORDER BY order_id DESC
 LIMIT 1000;`);
   const popoverRef = useRef(null);
   const handsontableRef = useRef(null);
   const hotInstanceRef = useRef(null);
 
-  // Initialize with sample data similar to the Handsontable demo
+  // Initialize with imported sample data
   useEffect(() => {
-    const sampleData = [
-      ['20034594130', 'Crossfit_Hanna', 'NexPay', '2023', '16'],
-      ['36926127356', 'Belles_cookbook_store', 'GlobalCard', '2023', '23'],
-      ['31114608278', 'Golfclub_Baron_Friso', 'SwiftCharge', '2023', '4'],
-      ['45678912345', 'Martinis_Fine_Steakhouse', 'TransactPlus', '2023', '3'],
-      ['78912345678', 'Rafa_Al', 'NexPay', '2023', '17'],
-      ['12345678901', 'Tech_Startup_Co', 'GlobalCard', '2023', '8'],
-      ['98765432109', 'Coffee_Bean_Corner', 'SwiftCharge', '2023', '6'],
-      ['55566677788', 'Fashion_Boutique', 'TransactPlus', '2023', '20'],
-      ['11122233344', 'Bookstore_Plus', 'NexPay', '2023', '22'],
-      ['99988877766', 'Gym_Fitness_Center', 'GlobalCard', '2023', '21']
-    ];
-
-    const sampleColumns = [
-      { id: 'psp_reference', name: 'psp_reference', type: 'text' },
-      { id: 'merchant', name: 'merchant', type: 'text' },
-      { id: 'card_scheme', name: 'card_scheme', type: 'text' },
-      { id: 'year', name: 'year', type: 'text' },
-      { id: 'hour', name: 'hour', type: 'text' }
-    ];
-
     setTableData(sampleData);
     setColumns(sampleColumns);
 
@@ -177,11 +158,11 @@ LIMIT 1000;`);
     // Update table name and potentially reload data based on selection
     if (selection.type === 'table') {
       setTableName(selection.data.table);
-      // Generate sample SQL query for the selected table
-      const query = `SELECT *
+       // Generate sample SQL query for the selected table
+       const query = `SELECT *
 FROM ${selection.data.fullPath}
-WHERE year >= 2023
-ORDER BY psp_reference DESC
+WHERE created_at >= '2025-09-01'
+ORDER BY order_id DESC
 LIMIT 1000;`;
       setCurrentQuery(query);
     } else if (selection.type === 'query') {
@@ -191,16 +172,16 @@ LIMIT 1000;`;
 -- ${selection.data.description}
 
 SELECT 
-    psp_reference,
-    merchant,
-    card_scheme,
-    year,
-    hour,
-    COUNT(*) as transaction_count,
-    SUM(amount) as total_amount
-FROM main.default.merchant_payment_data
-WHERE year = 2023
-GROUP BY psp_reference, merchant, card_scheme, year, hour
+    order_id,
+    created_at,
+    customer_email,
+    total_price,
+    country,
+    COUNT(*) as order_count,
+    SUM(CAST(total_price AS DECIMAL)) as total_amount
+FROM main.default.order_data
+WHERE created_at >= '2025-09-01'
+GROUP BY order_id, created_at, customer_email, total_price, country
 HAVING COUNT(*) > 1
 ORDER BY total_amount DESC;`;
       setCurrentQuery(query);
